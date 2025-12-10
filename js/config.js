@@ -4,8 +4,10 @@
  */
 
 const CONFIG = {
-    // Live Backend URL
-    API_BASE_URL: 'https://erp.slict.lk/api/public/hotel',
+    // Automatically select API URL based on where the frontend is loaded
+    API_BASE_URL: (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+        ? 'http://localhost:3000/api/public/hotel'     // Local Development
+        : 'https://erp.slict.lk/api/public/hotel',     // Production (Vercel/Live)
 
     // Your Tenant ID
     TENANT_ID: 'ceylon-paradise',
