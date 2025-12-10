@@ -1,0 +1,238 @@
+/* Search Results Page Styles */
+:root {
+    --theme-purple: #4b0082; /* Deep purple matching the screenshots */
+    --theme-gold: #c5a059;
+    --text-dark: #333;
+    --text-muted: #666;
+    --bg-light: #f8f9fa;
+}
+
+body {
+    background-color: #fff;
+    font-family: 'Roboto Sans', sans-serif;
+}
+
+/* Search Summary Header */
+.search-summary {
+    background: #fff;
+    border-bottom: 1px solid #ddd;
+    padding: 20px 0;
+    margin-bottom: 30px;
+}
+.search-summary .hotel-info h1 {
+    color: var(--theme-purple);
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+}
+.search-summary .search-params {
+    display: flex;
+    gap: 40px;
+    margin-top: 20px;
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+}
+.search-param-item {
+    display: flex;
+    align-items: center;
+    color: var(--theme-purple);
+}
+.search-param-item i {
+    font-size: 24px;
+    margin-right: 15px;
+}
+.search-param-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    color: var(--theme-purple);
+    font-weight: bold;
+    display: block;
+}
+.search-param-value {
+    color: #333;
+    font-weight: 500;
+}
+
+/* Page Layout */
+.results-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+.page-title {
+    color: var(--theme-purple);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    font-size: 28px;
+    letter-spacing: 1px;
+}
+
+/* Room Card */
+.room-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    margin-bottom: 30px;
+    display: flex;
+    flex-wrap: wrap;
+}
+.room-image-col {
+    width: 30%;
+    padding: 0;
+}
+.room-image-col img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.room-details-col {
+    width: 70%;
+    padding: 20px 30px;
+}
+
+.room-header {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+.room-title {
+    color: var(--theme-purple);
+    font-size: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+}
+.room-tags span {
+    display: inline-block;
+    border: 1px solid #ddd;
+    padding: 5px 15px;
+    font-size: 12px;
+    color: #333;
+    margin-right: 10px;
+    text-transform: uppercase;
+}
+.room-specs {
+    color: #d9534f; /* Reddish for "Booked in last 1 hour" mimic */
+    font-size: 13px;
+    margin-bottom: 10px;
+}
+.room-specs .spec-item {
+    color: #333;
+    margin-left: 10px;
+}
+.room-desc {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+}
+.room-amenities-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+.room-amenities-list li {
+    font-size: 13px;
+    color: #333;
+}
+.room-amenities-list i {
+    color: var(--theme-purple);
+    width: 20px;
+}
+
+/* Rate Plans (The Right Side Logic in Screenshot) */
+.rate-plans-container {
+    margin-top: 20px;
+    border-top: 1px solid #eee;
+}
+.rate-plan-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    border-bottom: 1px solid #eee;
+}
+.rate-plan-info {
+    max-width: 60%;
+}
+.rate-name {
+    font-weight: bold;
+    color: #333;
+    font-size: 16px;
+    text-decoration: underline;
+    margin-bottom: 5px;
+}
+.rate-perks {
+    color: #28a745; /* Green checkmarks */
+    font-size: 13px;
+}
+.rate-pricing {
+    text-align: right;
+}
+.price-strike {
+    text-decoration: line-through;
+    color: #999;
+    font-size: 14px;
+    display: block;
+}
+.price-main {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    display: block;
+}
+.price-unit {
+    font-size: 12px;
+    color: #999;
+    text-transform: uppercase;
+}
+.btn-book-rate {
+    background-color: var(--theme-purple);
+    color: #fff;
+    border: none;
+    padding: 10px 25px;
+    font-size: 14px;
+    text-transform: uppercase;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+.btn-book-rate:hover {
+    background-color: #3a006b;
+}
+
+/* Sidebar */
+.sidebar-box {
+    border: 1px solid var(--theme-purple);
+    padding: 20px;
+    background: #fff;
+}
+.sidebar-title {
+    color: var(--theme-purple);
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+}
+.member-benefits-list {
+    list-style: none;
+    padding: 0;
+}
+.member-benefits-list li {
+    margin-bottom: 15px;
+    display: flex;
+    font-size: 14px;
+    color: #333;
+}
+.member-benefits-list i {
+    color: var(--theme-purple);
+    font-size: 20px;
+    margin-right: 15px;
+    width: 25px;
+    text-align: center;
+}

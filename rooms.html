@@ -54,7 +54,7 @@
                       <li><a href="about.html">About</a></li>
                       <li><a href="events.html">Events</a></li>
                       <li><a href="contact.html">Contact</a></li>
-                      <li><a href="reservation.html">Reservation</a></li>
+                      <li><a href="select-room.html">Book Now</a></li>
                     </ul>
                   </div>
                 </div>
@@ -155,80 +155,8 @@
 
   <section class="section">
     <div class="container">
-
-      <div class="row">
-        <div class="col-md-6 col-lg-4 mb-5" data-aos="fade-up">
-          <a href="#" class="room">
-            <figure class="img-wrap">
-              <img src="images/img_1.jpg" alt="Free website template" class="img-fluid mb-3">
-            </figure>
-            <div class="p-3 text-center room-info">
-              <h2>Single Room</h2>
-              <span class="text-uppercase letter-spacing-1">90$ / per night</span>
-            </div>
-          </a>
-        </div>
-
-        <div class="col-md-6 col-lg-4 mb-5" data-aos="fade-up">
-          <a href="#" class="room">
-            <figure class="img-wrap">
-              <img src="images/img_2.jpg" alt="Free website template" class="img-fluid mb-3">
-            </figure>
-            <div class="p-3 text-center room-info">
-              <h2>Family Room</h2>
-              <span class="text-uppercase letter-spacing-1">120$ / per night</span>
-            </div>
-          </a>
-        </div>
-
-        <div class="col-md-6 col-lg-4 mb-5" data-aos="fade-up">
-          <a href="#" class="room">
-            <figure class="img-wrap">
-              <img src="images/img_3.jpg" alt="Free website template" class="img-fluid mb-3">
-            </figure>
-            <div class="p-3 text-center room-info">
-              <h2>Presidential Room</h2>
-              <span class="text-uppercase letter-spacing-1">250$ / per night</span>
-            </div>
-          </a>
-        </div>
-
-        <div class="col-md-6 col-lg-4 mb-5" data-aos="fade-up">
-          <a href="#" class="room">
-            <figure class="img-wrap">
-              <img src="images/img_1.jpg" alt="Free website template" class="img-fluid mb-3">
-            </figure>
-            <div class="p-3 text-center room-info">
-              <h2>Single Room</h2>
-              <span class="text-uppercase letter-spacing-1">90$ / per night</span>
-            </div>
-          </a>
-        </div>
-
-        <div class="col-md-6 col-lg-4 mb-5" data-aos="fade-up">
-          <a href="#" class="room">
-            <figure class="img-wrap">
-              <img src="images/img_2.jpg" alt="Free website template" class="img-fluid mb-3">
-            </figure>
-            <div class="p-3 text-center room-info">
-              <h2>Family Room</h2>
-              <span class="text-uppercase letter-spacing-1">120$ / per night</span>
-            </div>
-          </a>
-        </div>
-
-        <div class="col-md-6 col-lg-4 mb-5" data-aos="fade-up">
-          <a href="#" class="room">
-            <figure class="img-wrap">
-              <img src="images/img_3.jpg" alt="Free website template" class="img-fluid mb-3">
-            </figure>
-            <div class="p-3 text-center room-info">
-              <h2>Presidential Room</h2>
-              <span class="text-uppercase letter-spacing-1">250$ / per night</span>
-            </div>
-          </a>
-        </div>
-
+      <div class="row" id="rooms-container">
+        <!-- Rooms will be loaded via JS -->
       </div>
     </div>
   </section>
@@ -278,7 +206,7 @@
           <h2 class="text-white font-weight-bold">A Best Place To Stay. Reserve Now!</h2>
         </div>
         <div class="col-12 col-md-6 text-center text-md-right" data-aos="fade-up" data-aos-delay="200">
-          <a href="reservation.html" class="btn btn-outline-white-primary py-3 text-white px-5">Reserve Now</a>
+          <a href="select-room.html" class="btn btn-outline-white-primary py-3 text-white px-5">Reserve Now</a>
         </div>
       </div>
     </div>
@@ -359,6 +287,8 @@
 
 
   <script src="js/main.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/rooms.js"></script>
 </body>
 
 </html>
