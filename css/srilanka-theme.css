@@ -1,0 +1,316 @@
+/*
+ * Ceylon Paradise Resort - Sri Lankan Theme
+ * Custom styles for Sri Lankan cultural elements
+ */
+
+/* Sri Lankan Color Palette */
+:root {
+  --ceylon-gold: #D4AF37;
+  --ceylon-maroon: #8B1538;
+  --ceylon-teal: #006B6E;
+  --ceylon-saffron: #FF9933;
+  --ceylon-emerald: #50C878;
+  --ocean-blue: #0077BE;
+  --sunset-orange: #FF6B35;
+  --tropical-green: #2D5F3F;
+}
+
+/* Enhanced Logo */
+.site-logo a {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  background: linear-gradient(135deg, var(--ceylon-gold), var(--ceylon-saffron));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Sri Lankan Decorative Border Pattern */
+.sri-lankan-border {
+  border-top: 3px solid var(--ceylon-gold);
+  border-bottom: 3px solid var(--ceylon-gold);
+  position: relative;
+  padding: 20px 0;
+}
+
+.sri-lankan-border::before,
+.sri-lankan-border::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: var(--ceylon-maroon);
+}
+
+.sri-lankan-border::before {
+  top: -3px;
+}
+
+.sri-lankan-border::after {
+  bottom: -3px;
+}
+
+/* Enhanced Primary Button */
+.btn-primary {
+  background: linear-gradient(135deg, var(--ceylon-maroon), var(--ceylon-teal));
+  border: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(139, 21, 56, 0.3);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--ceylon-teal), var(--ceylon-maroon));
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(139, 21, 56, 0.4);
+}
+
+/* Form Enhancements */
+.form-control {
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 12px 15px;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus {
+  border-color: var(--ceylon-gold);
+  box-shadow: 0 0 0 0.2rem rgba(212, 175, 55, 0.25);
+}
+
+/* Contact Info Cards */
+.contact-info p {
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.contact-info .font-weight-bold {
+  color: var(--ceylon-gold);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Testimonial Enhancements */
+.testimonial {
+  background: rgba(255,255,255,0.05);
+  border-radius: 15px;
+  padding: 30px;
+  margin: 10px;
+  transition: all 0.3s ease;
+}
+
+.testimonial:hover {
+  background: rgba(255,255,255,0.1);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.testimonial .author-image img {
+  border: 4px solid var(--ceylon-gold);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.testimonial blockquote p {
+  font-style: italic;
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: #333;
+}
+
+.testimonial-section.bg-light {
+  background: linear-gradient(180deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+/* Star Rating */
+.text-warning i {
+  font-size: 1rem;
+  margin: 0 2px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Footer Enhancements */
+footer.footer-section {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+footer.footer-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--ceylon-gold), var(--ceylon-saffron), var(--ceylon-teal));
+}
+
+footer h5 {
+  color: var(--ceylon-gold);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 20px;
+}
+
+footer .link li a {
+  transition: all 0.3s ease;
+  padding: 5px 0;
+  display: inline-block;
+}
+
+footer .link li a:hover {
+  color: var(--ceylon-gold);
+  transform: translateX(5px);
+}
+
+/* Social Icons */
+.social a {
+  display: inline-block;
+  width: 45px;
+  height: 45px;
+  line-height: 45px;
+  text-align: center;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+  margin: 0 5px;
+  transition: all 0.3s ease;
+}
+
+.social a:hover {
+  background: var(--ceylon-gold);
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+}
+
+/* Hero Section */
+.site-hero.overlay::before {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.site-hero .heading {
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+  font-size: 3rem;
+  font-weight: 700;
+}
+
+/* Custom Checkbox Styling */
+.custom-control-input:checked ~ .custom-control-label::before {
+  background-color: var(--ceylon-maroon);
+  border-color: var(--ceylon-maroon);
+}
+
+/* Room Type Selector */
+#room_type {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23D4AF37' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  padding-right: 40px;
+}
+
+/* Benefits List Styling */
+.contact-info ul li {
+  padding: 8px 0;
+  position: relative;
+  padding-left: 25px;
+}
+
+.contact-info ul li i {
+  position: absolute;
+  left: 0;
+  top: 12px;
+}
+
+/* Loading Animation for Forms */
+.btn-primary:active {
+  animation: pulse 0.5s ease;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.95);
+  }
+}
+
+/* Responsive Enhancements */
+@media (max-width: 768px) {
+  .site-logo a {
+    font-size: 1.2rem;
+  }
+
+  .site-hero .heading {
+    font-size: 2rem;
+  }
+
+  .testimonial {
+    margin: 10px 0;
+  }
+
+  .contact-info h3 {
+    font-size: 1.5rem;
+  }
+}
+
+/* Smooth Scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Enhanced Form Section */
+.contact-section form {
+  box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+/* Newsletter Form */
+.footer-newsletter .form-control {
+  border-radius: 25px 0 0 25px;
+  border: none;
+}
+
+.footer-newsletter .btn {
+  border-radius: 0 25px 25px 0;
+  background: var(--ceylon-gold);
+  color: #fff;
+  border: none;
+}
+
+.footer-newsletter .btn:hover {
+  background: var(--ceylon-saffron);
+}
+
+/* Accessibility Improvements */
+a:focus,
+button:focus,
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 3px solid var(--ceylon-gold);
+  outline-offset: 2px;
+}
+
+/* Print Styles */
+@media print {
+  .site-navbar,
+  .footer-section,
+  .testimonial-section {
+    display: none;
+  }
+}
+
+/* Performance: GPU Acceleration */
+.testimonial,
+.btn-primary,
+.social a {
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
