@@ -21,7 +21,16 @@ async function fetchRooms(roomsContainer, homeContainer) {
     let rooms = [];
 
     try {
-      const url = `${CONFIG.API_BASE_URL}/rooms?tenantId=${CONFIG.TENANT_ID}`;
+      // Calculate Default Dates (Today + Tomorrow)
+      const today = new Date();
+      const tomorrow = new Date(today);
+      tomorrow.setDate(today.getDate() + 1);
+
+      const fmt = (d) => d.toISOString().split('T')[0];
+      const checkIn = fmt(today);
+      const checkOut = fmt(tomorrow);
+
+      const url = `${CONFIG.API_BASE_URL}/rooms?tenantId=${CONFIG.TENANT_ID}&checkIn=${checkIn}&checkOut=${checkOut}&guests=1`;
       console.log(`Fetching rooms from: ${url}`);
 
       const response = await fetch(url);

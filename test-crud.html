@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD Verification Harness</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            padding: 20px;
+            font-family: monospace;
+        }
+
+        .log-entry {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .success {
+            color: green;
+        }
+
+        .error {
+            color: red;
+        }
+
+        .info {
+            color: blue;
+        }
+
+        #log-container {
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            height: 400px;
+            overflow-y: auto;
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>CRUD Verification</h1>
+        <div class="mb-3">
+            <button id="btn-run" class="btn btn-primary">Run Full CRUD Test</button>
+            <button id="btn-clear" class="btn btn-secondary">Clear Log</button>
+        </div>
+
+        <div id="log-container"></div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script>
+        const logContainer = document.getElementById('log-container');
+        const tenantId = CONFIG.TENANT_ID;
+        const apiBase = CONFIG.API_BASE_URL;
+
+        function log(message, type = 'info', data = null) {
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.innerHTML = `<strong>[${type.toUpperCase()}]</strong> ${message}`;
+            if (data) {
+                const pre = document.createElement('pre');
+                pre.textContent = JSON.stringify(data, null, 2);
+                entry.appendChild(pre);
+            }
+            logContainer.appendChild(entry);
+            console.log(`[${type}]`, message, data || '');
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+
+        // TEST VARIABLES
+        let testRoomId = null;
+        let testBookingId = null;
+
+        // 1. READ (GET)
+        async function testRead() {
+            const url = `${apiBase}/rooms?tenantId=${tenantId}`;
+            log(`Testing READ (Fetch Rooms) at: ${url}...`);
+            try {
+                const res = await fetch(url);
+                if (!res.ok) throw new Error(`Status: ${res.status}`);
+                const data = await res.json();
+                log(`Read Success. Found ${data.length} rooms.`, 'success');
+
+                if (data.length > 0) {
+                    testRoomId = data[0].id; // CAPTURE VALID ROOM ID
+                    log(`Captured Test Room ID: ${testRoomId}`, 'info');
+                } else {
+                    log("No rooms found, cannot proceed with Create test.", 'error');
+                }
+                return true;
+            } catch (e) {
+                log(`Read Failed: ${e.message}`, 'error');
+                return false;
+            }
+        }
+
+        // 2. CREATE (POST)
+        async function testCreate() {
+            if (!testRoomId) {
+                log("Skipping Create: No valid Room ID.", 'error');
+                return false;
+            }
+            log(`Testing CREATE (Make Booking) for Room ${testRoomId}...`);
+            const payload = {
+                tenantId: tenantId,
+                roomId: testRoomId,
+                rateName: "Standard Rate", // Trying a more standard rate name
+                price: 100,
+                guestName: "Automated Tester",
+                guestEmail: "test@example.com",
+                guestPhone: "555-0199",
+                checkIn: "2025-12-01",
+                checkOut: "2025-12-05",
+                guests: 1
+            };
+
+            try {
+                const res = await fetch(`${apiBase}/bookings`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!res.ok) {
+                    const err = await res.text();
+                    throw new Error(`Status: ${res.status} - ${err}`);
+                }
+
+                const data = await res.json();
+                testBookingId = data.bookingNumber || data.id;
+
+                log(`Create Success. Booking created with ID: ${testBookingId}`, 'success', data);
+                return true;
+            } catch (e) {
+                log(`Create Failed: ${e.message}`, 'error');
+                return false;
+            }
+        }
+
+        // 3. UPDATE (PUT/PATCH) - Modify the Booking
+        async function testUpdate() {
+            if (!testBookingId) {
+                log("Skipping Update: No Booking ID from Create step.", 'error');
+                return false;
+            }
+            log(`Testing UPDATE (Modify Booking ${testBookingId})...`);
+
+            const payload = {
+                guestName: "Updated Tester Name"
+            };
+
+            try {
+                const res = await fetch(`${apiBase}/bookings/${testBookingId}`, {
+                    method: 'PUT', // Or PATCH
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (res.status === 404 || res.status === 405) {
+                    log(`Update Failed: Endpoint not found or method not allowed (${res.status}).`, 'error');
+                    return false;
+                }
+
+                if (!res.ok) {
+                    const err = await res.text();
+                    throw new Error(`Status: ${res.status} - ${err}`);
+                }
+
+                const data = await res.json();
+                log("Update Success.", 'success', data);
+                return true;
+
+            } catch (e) {
+                log(`Update Failed: ${e.message}`, 'error');
+                return false;
+            }
+        }
+
+        // 4. DELETE (DELETE) - Cancel the Booking
+        async function testDelete() {
+            if (!testBookingId) {
+                log("Skipping Delete: No Booking ID from Create step.", 'error');
+                return false;
+            }
+            log(`Testing DELETE (Cancel Booking ${testBookingId})...`);
+
+            try {
+                const res = await fetch(`${apiBase}/bookings/${testBookingId}`, {
+                    method: 'DELETE'
+                });
+
+                if (res.status === 404 || res.status === 405) {
+                    log(`Delete Failed: Endpoint not found or method not allowed (${res.status}).`, 'error');
+                    return false;
+                }
+
+                if (!res.ok) {
+                    const err = await res.text();
+                    throw new Error(`Status: ${res.status} - ${err}`);
+                }
+
+                const data = await res.json().catch(() => ({ status: "Deleted" })); // Sometimes delete returns 204 No Content
+                log("Delete Success.", 'success', data);
+                return true;
+            } catch (e) {
+                log(`Delete Failed: ${e.message}`, 'error');
+                return false;
+            }
+        }
+
+
+        document.getElementById('btn-run').addEventListener('click', async () => {
+            logContainer.innerHTML = '';
+            log("Starting CRUD Test Sequence...");
+
+            await testRead();
+            await new Promise(r => setTimeout(r, 1000));
+
+            const created = await testCreate();
+            await new Promise(r => setTimeout(r, 1000));
+
+            if (created) {
+                await testUpdate();
+                await new Promise(r => setTimeout(r, 1000));
+
+                await testDelete();
+            } else {
+                log("Stopping sequence due to Create failure.", 'error');
+            }
+
+            log("Test Sequence Complete.");
+        });
+
+        document.getElementById('btn-clear').addEventListener('click', () => {
+            logContainer.innerHTML = '';
+        });
+
+    </script>
+</body>
+
+</html>
