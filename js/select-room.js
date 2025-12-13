@@ -29,13 +29,21 @@ async function fetchRoomsForSelection(checkin, checkout, guests) {
         let rooms = [];
         // Attempt API Fetch
         try {
-            const url = `${CONFIG.API_BASE_URL}/rooms?tenantId=${CONFIG.TENANT_ID}&checkIn=${checkin}&checkOut=${checkout}&guests=${guests}`;
+            // Helper to format date
+            const fmt = (dStr) => {
+                const d = new Date(dStr);
+                return isNaN(d.getTime()) ? dStr : d.toISOString().split('T')[0];
+            };
+
+            const url = `${CONFIG.API_BASE_URL}/rooms?tenantId=${CONFIG.TENANT_ID}&checkIn=${fmt(checkin)}&checkOut=${fmt(checkout)}&guests=${guests}`;
             const response = await fetch(url);
             if (!response.ok) throw new Error('API Error');
             rooms = await response.json();
         } catch (e) {
-            console.warn("Using Fallback Data", e);
-            rooms = MOCK_DATA.ROOMS; // Fallback to config.js mock data
+            console.error("API Error", e);
+            // FAIL HARD - No Mock Fallback
+            // rooms = MOCK_DATA.ROOMS; 
+            throw e; // Re-throw to trigger error UI
         }
 
         loading.style.display = 'none';
@@ -61,6 +69,9 @@ async function fetchRoomsForSelection(checkin, checkout, guests) {
 function renderRoomCards(container, rooms) {
     container.innerHTML = '';
 
+    const params = new URLSearchParams(window.location.search);
+    const nights = calculateNights(params.get('checkin'), params.get('checkout'));
+
     rooms.forEach(room => {
         const imageUrl = room.images && room.images.length > 0 ? room.images[0] : 'images/placeholder.jpg';
 
@@ -83,7 +94,7 @@ function renderRoomCards(container, rooms) {
                             <span class="price-strike">$${rate.strikePrice}</span>
                             <span class="price-main" style="${rate.isMember ? 'color: purple;' : 'color: #333;'}">$${rate.price}</span>
                             <span class="price-unit">Per Night</span>
-                            <button class="btn-book-rate" style="${rate.isMember ? '' : 'background-color:#333;'}" onclick="openBookingModal('${room.id}', '${encodeURIComponent(rate.name)}', ${rate.price})">Book Now</button>
+                            <button class="btn-book-rate" style="${rate.isMember ? '' : 'background-color:#333;'}" onclick="openBookingModal('${room.id}', '${encodeURIComponent(rate.name)}', ${rate.price}, ${nights})">Book Now</button>
                         </div>
                     </div>
                 `;
@@ -134,21 +145,34 @@ function renderRoomCards(container, rooms) {
     });
 }
 
-function openBookingModal(roomId, rateName, price) {
+function openBookingModal(roomId, rateName, pricePerNight, nights) {
+    if (!nights || nights < 1) nights = 1;
+    const totalPrice = pricePerNight * nights;
+
     // 1. Populate Hidden Fields
     document.getElementById('booking-room-id').value = roomId;
-    document.getElementById('booking-rate-name').decodeURIComponent ? decodeURIComponent(rateName) : rateName; // Decode if previously encoded
     document.getElementById('booking-rate-name').value = decodeURIComponent(rateName);
-    document.getElementById('booking-price').value = price;
+    document.getElementById('booking-price').value = totalPrice; // Send Total Price to API
 
     // 2. Show Summary
     document.getElementById('modal-room-summary').innerHTML = `
         <strong>${decodeURIComponent(rateName)}</strong><br>
-        Price: $${price} / night
+        Price: $${pricePerNight} x ${nights} Night(s)<br>
+        <span class="text-success" style="font-size: 1.2em;">Total: $${totalPrice.toFixed(2)}</span>
     `;
 
     // 3. Show Modal
     $('#bookingModal').modal('show');
+}
+
+function calculateNights(inStr, outStr) {
+    if (!inStr || !outStr) return 1;
+    const d1 = new Date(inStr);
+    const d2 = new Date(outStr);
+    if (isNaN(d1) || isNaN(d2)) return 1;
+    const diffTime = Math.abs(d2 - d1);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays > 0 ? diffDays : 1;
 }
 
 // Handle Direct Form Submission

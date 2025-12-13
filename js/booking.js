@@ -44,6 +44,15 @@ document.addEventListener('DOMContentLoaded', function () {
         reservationForm.addEventListener('submit', async function (e) {
             e.preventDefault();
 
+            // Validate Dates
+            const cin = new Date(document.getElementById('checkin_date').value);
+            const cout = new Date(document.getElementById('checkout_date').value);
+
+            if (cout <= cin) {
+                alert("Check-out date must be after Check-in date.");
+                return;
+            }
+
             // Gather Data
             // Gather Data
             const formData = {
@@ -148,10 +157,9 @@ function showSuccess(data) {
 // Assuming datepicker gives MM/DD/YYYY or similar, we might need parsing.
 // For now, let's assume standard format or just pass through for the mock.
 function formatDate(dateString) {
-    // Basic implementation: if already ISO, ok. If MM/DD/YYYY, convert.
-    // This depends on the bootstrap-datepicker config. 
-    // Let's assume the datepicker output needs standardizing if feasible.
-    // Ideally we configure datepicker to output yyyy-mm-dd.
-    // For this demo, we return as is, assuming the users types or picks correctly or mock accepts it.
-    return dateString;
+    // Convert "13 December, 2025" -> "2025-12-13"
+    if (!dateString) return null;
+    const d = new Date(dateString);
+    if (isNaN(d.getTime())) return dateString; // Fallback
+    return d.toISOString().split('T')[0];
 }

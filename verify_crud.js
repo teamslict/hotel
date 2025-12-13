@@ -7,6 +7,9 @@ const apiBase = 'https://erp.slict.lk/api/hotel';
 // Tenant ID as per config
 const tenantId = 'ceylon-paradise';
 
+// Confirming verify_crud.js matches new frontend logic
+global.testPrice = 100; // Define global.testPrice for the test
+
 function request(url, method = 'GET', data = null) {
     return new Promise((resolve, reject) => {
         const urlObj = new URL(url);
