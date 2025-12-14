@@ -36,6 +36,12 @@
         <div class="col-6 col-lg-8">
 
 
+          <!-- Branch Selector (for multi-location hotels) -->
+          <div id="branch-selector" class="d-inline-block mr-3" style="position: relative; top: 2px;"></div>
+
+          <!-- Language Switcher (visible) -->
+          <div id="language-switcher" class="d-inline-block mr-3" style="position: relative; top: 2px;"></div>
+
           <div class="site-menu-toggle js-site-menu-toggle" data-aos="fade">
             <span></span>
             <span></span>
@@ -57,7 +63,6 @@
                       <li><a href="select-room.html" data-i18n="nav.bookNow">Book Now</a></li>
                       <li><a href="select-room.html" class="btn btn-primary text-white ml-3" style="padding: 10px 20px;"
                           data-i18n="nav.bookNow">Book Now</a></li>
-                      <li id="language-switcher" style="margin-left: 10px;"></li>
                     </ul>
                   </div>
                 </div>
@@ -75,9 +80,9 @@
     <div class="container">
       <div class="row site-hero-inner justify-content-center align-items-center">
         <div class="col-md-10 text-center" data-aos="fade-up">
-          <span class="custom-caption text-uppercase text-white d-block  mb-3">Welcome To Ceylon Paradise <span
-              class="fa fa-star text-primary"></span> Resort</span>
-          <h1 class="heading">Experience Luxury & Serenity</h1>
+          <span class="custom-caption text-uppercase text-white d-block mb-3" data-i18n="hero.tagline">YOUR BEACHFRONT
+            ESCAPE IN SRI LANKA</span>
+          <h1 class="heading" id="hero-title">Welcome to Ceylon Paradise</h1>
         </div>
       </div>
     </div>
@@ -99,14 +104,16 @@
           <form action="#" id="home-booking-form">
             <div class="row">
               <div class="col-md-6 mb-3 mb-lg-0 col-lg-3">
-                <label for="checkin_date" class="font-weight-bold text-black">Check In</label>
+                <label for="checkin_date" class="font-weight-bold text-black" data-i18n="booking.checkIn">Check
+                  In</label>
                 <div class="field-icon-wrap">
                   <div class="icon"><span class="icon-calendar"></span></div>
                   <input type="text" id="checkin_date" class="form-control" placeholder="Select Date">
                 </div>
               </div>
               <div class="col-md-6 mb-3 mb-lg-0 col-lg-3">
-                <label for="checkout_date" class="font-weight-bold text-black">Check Out</label>
+                <label for="checkout_date" class="font-weight-bold text-black" data-i18n="booking.checkOut">Check
+                  Out</label>
                 <div class="field-icon-wrap">
                   <div class="icon"><span class="icon-calendar"></span></div>
                   <input type="text" id="checkout_date" class="form-control" placeholder="Select Date">
@@ -115,7 +122,7 @@
               <div class="col-md-6 mb-3 mb-md-0 col-lg-3">
                 <div class="row">
                   <div class="col-md-6 mb-3 mb-md-0">
-                    <label for="adults" class="font-weight-bold text-black">Adults</label>
+                    <label for="adults" class="font-weight-bold text-black" data-i18n="booking.adults">Adults</label>
                     <div class="field-icon-wrap">
                       <div class="icon"><span class="ion-ios-arrow-down"></span></div>
                       <select name="adults" id="adults" class="form-control">
@@ -127,7 +134,8 @@
                     </div>
                   </div>
                   <div class="col-md-6 mb-3 mb-md-0">
-                    <label for="children" class="font-weight-bold text-black">Children</label>
+                    <label for="children" class="font-weight-bold text-black"
+                      data-i18n="booking.children">Children</label>
                     <div class="field-icon-wrap">
                       <div class="icon"><span class="ion-ios-arrow-down"></span></div>
                       <select name="children" id="children" class="form-control">
@@ -142,7 +150,8 @@
                 </div>
               </div>
               <div class="col-md-6 col-lg-3 align-self-end">
-                <button type="submit" class="btn btn-primary btn-block text-white">Check Availability</button>
+                <button type="submit" class="btn btn-primary btn-block text-white" data-i18n="booking.search">Check
+                  Availability</button>
               </div>
             </div>
           </form>
@@ -689,6 +698,7 @@
   <script src="js/config.js"></script>
   <script src="js/i18n.js"></script>
   <script src="js/theme.js"></script>
+  <script src="js/branches.js"></script>
   <script src="js/rooms.js"></script>
   <script src="js/booking.js"></script>
 

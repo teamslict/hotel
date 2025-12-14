@@ -1,6 +1,6 @@
 /**
  * i18n.js - Internationalization Engine for Hotel Frontend
- * Supports: English (en), Tamil (ta), Sinhala (si)
+ * Supports: English (en), Tamil (ta), Sinhala (si), Arabic (ar)
  * 
  * Usage:
  * 1. Add data-i18n="key.path" to HTML elements
@@ -19,7 +19,8 @@ const i18n = {
     languages: [
         { code: 'en', name: 'English', flag: '🇬🇧' },
         { code: 'ta', name: 'தமிழ்', flag: '🇱🇰' },
-        { code: 'si', name: 'සිංහල', flag: '🇱🇰' }
+        { code: 'si', name: 'සිංහල', flag: '🇱🇰' },
+        { code: 'ar', name: 'العربية', flag: '🇸🇦' }
     ],
 
     /**
@@ -34,6 +35,9 @@ const i18n = {
 
         // Apply translations to DOM
         this.translatePage();
+
+        // Set document direction (RTL for Arabic)
+        this.updateDocumentDirection();
 
         // Create language switcher if container exists
         this.createLanguageSwitcher();
@@ -81,7 +85,7 @@ const i18n = {
         document.querySelectorAll('[data-i18n]').forEach(el => {
             const key = el.getAttribute('data-i18n');
             const translated = this.t(key);
-            if (translated) {
+            if (translated && translated !== key) {
                 // Handle placeholder attribute
                 if (el.hasAttribute('placeholder')) {
                     el.placeholder = translated;
@@ -90,6 +94,15 @@ const i18n = {
                 }
             }
         });
+
+        // Update hero title with hotel name interpolation
+        const heroTitle = document.getElementById('hero-title');
+        if (heroTitle) {
+            const hotelName = (typeof HOTEL_CONFIG !== 'undefined' && HOTEL_CONFIG?.hotelName)
+                ? HOTEL_CONFIG.hotelName
+                : 'Ceylon Paradise';
+            heroTitle.textContent = this.t('hero.title', { hotelName });
+        }
 
         // Update document title if exists
         const titleKey = document.querySelector('title[data-i18n]');
@@ -136,9 +149,19 @@ const i18n = {
         await this.loadTranslations(locale);
         this.translatePage();
         this.updateSwitcher();
+        this.updateDocumentDirection();
 
         // Dispatch event for other scripts to react
         window.dispatchEvent(new CustomEvent('localeChanged', { detail: { locale } }));
+    },
+
+    /**
+     * Update document direction for RTL languages (Arabic)
+     */
+    updateDocumentDirection() {
+        const isRTL = this.locale === 'ar';
+        document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
+        document.documentElement.lang = this.locale;
     },
 
     /**
