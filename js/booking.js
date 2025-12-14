@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // Gather Data
             // Gather Data
             const formData = {
-                tenantId: CONFIG.TENANT_ID,
+                tenantId: TENANT_ID || CONFIG.getSubdomain(), // Use dynamic tenant ID
                 roomId: roomId || "default-room",
                 rateName: params.get('rateName') || "Standard Rate", // Required by backend
                 price: parseFloat(params.get('price')) || 0,

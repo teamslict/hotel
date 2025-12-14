@@ -1,6 +1,6 @@
 /**
  * Global Configuration for the Hotel Frontend
- * Defines API endpoints and Tenant configuration.
+ * Defines API endpoints and dynamic Tenant resolution.
  */
 
 const CONFIG = {
@@ -9,14 +9,47 @@ const CONFIG = {
         ? 'http://localhost:3000/api/public/hotel'     // Local Development
         : 'https://erp.slict.lk/api/public/hotel',     // Production (Vercel/Live)
 
-    // Your Tenant ID
-    TENANT_ID: 'ceylon-paradise',
+    // REMOVED: TENANT_ID is no longer hardcoded here!
+    // The tenantId is now resolved dynamically by theme.js based on subdomain.
 
     // Set to false for Live Mode
-    USE_MOCK_FALLBACK: false
+    USE_MOCK_FALLBACK: false,
+
+    /**
+     * Get the subdomain dynamically from the URL.
+     * - For production: ceylon-paradise.hotels.myservice.com -> "ceylon-paradise"
+     * - For local dev: Use query param ?subdomain=ceylon-paradise
+     */
+    getSubdomain: function () {
+        const hostname = window.location.hostname;
+
+        // Local development: use query parameter
+        if (hostname === 'localhost' || hostname === '127.0.0.1') {
+            const params = new URLSearchParams(window.location.search);
+            const subdomain = params.get('subdomain');
+            if (subdomain) {
+                return subdomain;
+            }
+            // Fallback for local testing
+            console.warn('[Config] No subdomain query param. Using "ceylon-paradise" as default.');
+            return 'ceylon-paradise';
+        }
+
+        // Production: extract subdomain from hostname
+        // e.g., "ceylon-paradise.hotels.myservice.com" -> "ceylon-paradise"
+        const parts = hostname.split('.');
+        if (parts.length >= 2) {
+            // First part is the subdomain
+            return parts[0];
+        }
+
+        // Custom domain case: look for subdomain via HTTP header (requires server-side setup)
+        // For now, fallback to the full hostname as tenant identifier
+        return hostname;
+    }
 };
 
-// Mock Data for Testing (as per guide)
+// Mock Data for Testing (kept for fallback if enabled)
 const MOCK_DATA = {
     ROOMS: [
         {
@@ -70,25 +103,7 @@ const MOCK_DATA = {
                     isMember: false
                 }
             ]
-        },
-        {
-            id: '3',
-            roomNumber: '305',
-            roomType: 'Presidential Suite',
-            basePrice: 500.00,
-            maxOccupancy: 2,
-            amenities: ['Jacuzzi', 'Private Butler', 'Panoramic View'],
-            images: ['images/img_3.jpg'],
-            description: 'The ultimate in luxury and privacy.',
-            rates: [
-                {
-                    name: 'VIP Member Exclusive',
-                    price: 450,
-                    strikePrice: 500,
-                    perks: ['Private Butler', 'Lounge Access', 'Champagne on arrival'],
-                    isMember: true
-                }
-            ]
         }
     ]
 };
+

@@ -1,9 +1,10 @@
 /**
  * Select Room Logic
  * Fetches rooms and renders them in the 'Search Results' style.
+ * IMPORTANT: This script must wait for theme.js to initialize the tenant.
  */
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', async function () {
     // 1. Parse URL Params
     const params = new URLSearchParams(window.location.search);
     const checkin = params.get('checkin') || 'Selected Date';
@@ -17,7 +18,16 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('summary-checkin').textContent = checkin;
     document.getElementById('summary-checkout').textContent = checkout;
 
-    // 3. Fetch Rooms
+    // 3. Wait for tenant to be initialized, then fetch rooms
+    if (typeof tenantReadyPromise !== 'undefined') {
+        try {
+            await tenantReadyPromise;
+        } catch (e) {
+            console.error('[SelectRoom] Tenant initialization failed');
+            return;
+        }
+    }
+
     fetchRoomsForSelection(checkin, checkout, totalGuests);
 });
 
@@ -35,7 +45,10 @@ async function fetchRoomsForSelection(checkin, checkout, guests) {
                 return isNaN(d.getTime()) ? dStr : d.toISOString().split('T')[0];
             };
 
-            const url = `${CONFIG.API_BASE_URL}/rooms?tenantId=${CONFIG.TENANT_ID}&checkIn=${fmt(checkin)}&checkOut=${fmt(checkout)}&guests=${guests}`;
+            // Use dynamic TENANT_ID from theme.js
+            const tenantId = TENANT_ID || CONFIG.getSubdomain();
+            const url = `${CONFIG.API_BASE_URL}/rooms?tenantId=${tenantId}&checkIn=${fmt(checkin)}&checkOut=${fmt(checkout)}&guests=${guests}`;
+            console.log(`[SelectRoom] Fetching rooms from: ${url}`);
             const response = await fetch(url);
             if (!response.ok) throw new Error('API Error');
             rooms = await response.json();
@@ -186,7 +199,7 @@ document.getElementById('direct-booking-form').addEventListener('submit', async 
     btn.disabled = true;
 
     const formData = {
-        tenantId: CONFIG.TENANT_ID,
+        tenantId: TENANT_ID || CONFIG.getSubdomain(), // Use dynamic tenant ID
         roomId: document.getElementById('booking-room-id').value,
         rateName: document.getElementById('booking-rate-name').value,
         price: parseFloat(document.getElementById('booking-price').value),

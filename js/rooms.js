@@ -1,6 +1,7 @@
 /**
  * Rooms Handler
  * Fetches room data from the API and renders it to the DOM.
+ * IMPORTANT: This script must wait for theme.js to initialize the tenant.
  */
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -8,9 +9,24 @@ document.addEventListener('DOMContentLoaded', function () {
   const homeContainer = document.getElementById('home-rooms-container');
 
   if (roomsContainer || homeContainer) {
-    fetchRooms(roomsContainer, homeContainer);
+    // Wait for tenant to be initialized before fetching rooms
+    loadRooms(roomsContainer, homeContainer);
   }
 });
+
+async function loadRooms(roomsContainer, homeContainer) {
+  // Wait for theme.js to finish loading the tenant
+  if (typeof tenantReadyPromise !== 'undefined') {
+    try {
+      await tenantReadyPromise;
+    } catch (e) {
+      console.error('[Rooms] Tenant initialization failed, cannot load rooms');
+      return;
+    }
+  }
+
+  fetchRooms(roomsContainer, homeContainer);
+}
 
 async function fetchRooms(roomsContainer, homeContainer) {
   // Show Loading
@@ -30,8 +46,10 @@ async function fetchRooms(roomsContainer, homeContainer) {
       const checkIn = fmt(today);
       const checkOut = fmt(tomorrow);
 
-      const url = `${CONFIG.API_BASE_URL}/rooms?tenantId=${CONFIG.TENANT_ID}&checkIn=${checkIn}&checkOut=${checkOut}&guests=1`;
-      console.log(`Fetching rooms from: ${url}`);
+      // Use the dynamically resolved TENANT_ID from theme.js
+      const tenantId = TENANT_ID || CONFIG.getSubdomain();
+      const url = `${CONFIG.API_BASE_URL}/rooms?tenantId=${tenantId}&checkIn=${checkIn}&checkOut=${checkOut}&guests=1`;
+      console.log(`[Rooms] Fetching rooms from: ${url}`);
 
       const response = await fetch(url);
       if (!response.ok) throw new Error('Network response was not ok');
