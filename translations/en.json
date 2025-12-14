@@ -1,0 +1,52 @@
+{
+    "nav": {
+        "home": "Home",
+        "rooms": "Rooms",
+        "dining": "Dining",
+        "experiences": "Experiences",
+        "contact": "Contact",
+        "bookNow": "Book Now"
+    },
+    "hero": {
+        "tagline": "YOUR BEACHFRONT ESCAPE IN SRI LANKA",
+        "title": "Welcome to {hotelName}",
+        "subtitle": "Experience luxury and comfort"
+    },
+    "booking": {
+        "checkIn": "Check In",
+        "checkOut": "Check Out",
+        "adults": "Adults",
+        "children": "Children",
+        "guests": "Guests",
+        "search": "Check Availability",
+        "selectRoom": "Select a Room",
+        "bookNow": "Book Now",
+        "perNight": "Per Night",
+        "memberRate": "MEMBER RATE"
+    },
+    "rooms": {
+        "title": "Our Rooms",
+        "selectRoom": "Select a Room",
+        "sleeps": "Sleeps {count}",
+        "view": "View Details",
+        "amenities": "Amenities"
+    },
+    "contact": {
+        "title": "Contact Us",
+        "name": "Your Name",
+        "email": "Your Email",
+        "phone": "Phone Number",
+        "message": "Message",
+        "send": "Send Message"
+    },
+    "footer": {
+        "rights": "All Rights Reserved",
+        "privacy": "Privacy Policy",
+        "terms": "Terms of Service"
+    },
+    "common": {
+        "loading": "Loading...",
+        "error": "An error occurred",
+        "noRooms": "No rooms available"
+    }
+}

@@ -49,14 +49,15 @@
                 <div class="row full-height align-items-center">
                   <div class="col-md-6 mx-auto">
                     <ul class="list-unstyled menu">
-                      <li class="active"><a href="index.html">Home</a></li>
-                      <li><a href="rooms.html">Rooms</a></li>
+                      <li class="active"><a href="index.html" data-i18n="nav.home">Home</a></li>
+                      <li><a href="rooms.html" data-i18n="nav.rooms">Rooms</a></li>
                       <li><a href="about.html">About</a></li>
                       <li><a href="events.html">Events</a></li>
-                      <li><a href="contact.html">Contact</a></li>
-                      <li><a href="select-room.html">Book Now</a></li>
-                      <li><a href="select-room.html" class="btn btn-primary text-white ml-3"
-                          style="padding: 10px 20px;">Book Now</a></li>
+                      <li><a href="contact.html" data-i18n="nav.contact">Contact</a></li>
+                      <li><a href="select-room.html" data-i18n="nav.bookNow">Book Now</a></li>
+                      <li><a href="select-room.html" class="btn btn-primary text-white ml-3" style="padding: 10px 20px;"
+                          data-i18n="nav.bookNow">Book Now</a></li>
+                      <li id="language-switcher" style="margin-left: 10px;"></li>
                     </ul>
                   </div>
                 </div>
@@ -686,9 +687,86 @@
   <script src="js/jquery.magnific-popup.min.js"></script>
   <script src="js/main.js"></script>
   <script src="js/config.js"></script>
+  <script src="js/i18n.js"></script>
   <script src="js/theme.js"></script>
   <script src="js/rooms.js"></script>
   <script src="js/booking.js"></script>
+
+  <!-- Language Switcher Styles -->
+  <style>
+    .lang-dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .lang-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 12px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 6px;
+      color: #fff;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+
+    .lang-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .lang-menu {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      margin-top: 4px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      overflow: hidden;
+      display: none;
+      min-width: 140px;
+      z-index: 1000;
+    }
+
+    .lang-menu.show {
+      display: block;
+    }
+
+    .lang-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      padding: 10px 14px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-size: 14px;
+      color: #333;
+      transition: all 0.2s;
+    }
+
+    .lang-option:hover {
+      background: #f5f5f5;
+    }
+
+    .lang-option.active {
+      background: #e8f4ff;
+      color: #0066cc;
+    }
+
+    .lang-flag {
+      font-size: 16px;
+    }
+
+    .lang-arrow {
+      font-size: 10px;
+      opacity: 0.7;
+    }
+  </style>
 </body>
 
 </html>

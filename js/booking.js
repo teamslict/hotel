@@ -20,7 +20,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
+            // Get current subdomain to preserve it across pages
+            const subdomain = CONFIG.getSubdomain();
             const params = new URLSearchParams({
+                subdomain, // Always include subdomain
                 checkin, checkout, adults, children
             });
             // Redirect to the new Search Results / Select Room page

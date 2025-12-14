@@ -18,12 +18,29 @@ document.addEventListener('DOMContentLoaded', async function () {
     document.getElementById('summary-checkin').textContent = checkin;
     document.getElementById('summary-checkout').textContent = checkout;
 
-    // 3. Wait for tenant to be initialized, then fetch rooms
+    // 3. Wait for tenant to be initialized, then update hotel info and fetch rooms
     if (typeof tenantReadyPromise !== 'undefined') {
         try {
             await tenantReadyPromise;
+
+            // Update hotel header with dynamic config
+            if (HOTEL_CONFIG) {
+                const hotelName = HOTEL_CONFIG.hotelName || 'Hotel';
+                document.getElementById('hotel-name').textContent = hotelName;
+                document.getElementById('hotel-address').textContent = HOTEL_CONFIG.address || '';
+                document.getElementById('hotel-phone').textContent = HOTEL_CONFIG.contactPhone || '';
+                document.title = `Select Room - ${hotelName}`;
+
+                // Set home link with subdomain preserved
+                const subdomain = CONFIG.getSubdomain();
+                const homeLink = document.getElementById('hotel-name-link');
+                if (homeLink) {
+                    homeLink.href = `index.html?subdomain=${subdomain}`;
+                }
+            }
         } catch (e) {
             console.error('[SelectRoom] Tenant initialization failed');
+            document.getElementById('hotel-name').textContent = 'Hotel Not Found';
             return;
         }
     }
@@ -85,6 +102,9 @@ function renderRoomCards(container, rooms) {
     const params = new URLSearchParams(window.location.search);
     const nights = calculateNights(params.get('checkin'), params.get('checkout'));
 
+    // Get currency from config (default to LKR)
+    const currency = (HOTEL_CONFIG && HOTEL_CONFIG.currency) || 'LKR';
+
     rooms.forEach(room => {
         const imageUrl = room.images && room.images.length > 0 ? room.images[0] : 'images/placeholder.jpg';
 
@@ -104,8 +124,8 @@ function renderRoomCards(container, rooms) {
                         </div>
                         <div class="rate-pricing">
                             ${rate.isMember ? '<span style="color: purple; font-weight:bold; letter-spacing: 1px;">MEMBER RATE</span>' : ''}
-                            <span class="price-strike">$${rate.strikePrice}</span>
-                            <span class="price-main" style="${rate.isMember ? 'color: purple;' : 'color: #333;'}">$${rate.price}</span>
+                            <span class="price-strike">${currency} ${rate.strikePrice}</span>
+                            <span class="price-main" style="${rate.isMember ? 'color: purple;' : 'color: #333;'}">${currency} ${rate.price}</span>
                             <span class="price-unit">Per Night</span>
                             <button class="btn-book-rate" style="${rate.isMember ? '' : 'background-color:#333;'}" onclick="openBookingModal('${room.id}', '${encodeURIComponent(rate.name)}', ${rate.price}, ${nights})">Book Now</button>
                         </div>
