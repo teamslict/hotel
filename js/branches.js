@@ -21,8 +21,8 @@ const BranchManager = {
         // Fetch branches for this tenant
         await this.fetchBranches();
 
-        // If branches exist, show the selector
-        if (this.branches.length > 1) {
+        // If branches exist, show the selector (even if just 1, so user sees location)
+        if (this.branches.length > 0) {
             this.renderBranchSelector();
         }
 
@@ -39,7 +39,7 @@ const BranchManager = {
         try {
             const subdomain = CONFIG.getSubdomain();
             const response = await fetch(
-                `${CONFIG.API_BASE_URL}/api/public/hotel/branches?subdomain=${subdomain}`
+                `${CONFIG.API_BASE_URL}/branches?subdomain=${subdomain}`
             );
 
             if (response.ok) {
@@ -64,7 +64,7 @@ const BranchManager = {
      */
     renderBranchSelector() {
         const container = document.getElementById('branch-selector');
-        if (!container || this.branches.length <= 1) return;
+        if (!container || this.branches.length === 0) return;
 
         const current = this.selectedBranch;
 
