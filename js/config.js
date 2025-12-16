@@ -40,7 +40,15 @@ const CONFIG = {
         const parts = hostname.split('.');
         if (parts.length >= 2) {
             // First part is the subdomain
-            return parts[0];
+            const subdomain = parts[0];
+
+            // SPECIAL CASE: 'hotel' is the generic subdomain for the main landing page
+            // We alias it to our demo tenant 'ceylon-paradise' so visitors see a working example
+            if (subdomain === 'hotel') {
+                return 'ceylon-paradise';
+            }
+
+            return subdomain;
         }
 
         // Custom domain case: look for subdomain via HTTP header (requires server-side setup)
