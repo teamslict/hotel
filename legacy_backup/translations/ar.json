@@ -1,0 +1,52 @@
+{
+    "nav": {
+        "home": "الرئيسية",
+        "rooms": "الغرف",
+        "dining": "المطعم",
+        "experiences": "التجارب",
+        "contact": "اتصل بنا",
+        "bookNow": "احجز الآن"
+    },
+    "hero": {
+        "tagline": "ملاذك على الشاطئ في سريلانكا",
+        "title": "مرحباً بكم في {hotelName}",
+        "subtitle": "استمتع بالفخامة والراحة"
+    },
+    "booking": {
+        "checkIn": "تسجيل الدخول",
+        "checkOut": "تسجيل الخروج",
+        "adults": "البالغون",
+        "children": "الأطفال",
+        "guests": "الضيوف",
+        "search": "تحقق من التوفر",
+        "selectRoom": "اختر غرفة",
+        "bookNow": "احجز الآن",
+        "perNight": "لكل ليلة",
+        "memberRate": "سعر العضو"
+    },
+    "rooms": {
+        "title": "غرفنا",
+        "selectRoom": "اختر غرفة",
+        "sleeps": "ينام {count}",
+        "view": "عرض التفاصيل",
+        "amenities": "المرافق"
+    },
+    "contact": {
+        "title": "اتصل بنا",
+        "name": "اسمك",
+        "email": "بريدك الإلكتروني",
+        "phone": "رقم الهاتف",
+        "message": "الرسالة",
+        "send": "إرسال الرسالة"
+    },
+    "footer": {
+        "rights": "جميع الحقوق محفوظة",
+        "privacy": "سياسة الخصوصية",
+        "terms": "شروط الخدمة"
+    },
+    "common": {
+        "loading": "جارٍ التحميل...",
+        "error": "حدث خطأ",
+        "noRooms": "لا توجد غرف متاحة"
+    }
+}

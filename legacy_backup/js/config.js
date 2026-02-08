@@ -17,8 +17,15 @@ const CONFIG = {
 
     /**
      * Get the subdomain dynamically from the URL.
-     * - For production: ceylon-paradise.hotels.myservice.com -> "ceylon-paradise"
-     * - For local dev: Use query param ?subdomain=ceylon-paradise
+     * 
+     * Domain Pattern: *.hotel.slict.lk
+     * Examples:
+     *   - hilton.hotel.slict.lk      -> "hilton"
+     *   - ceylon-paradise.hotel.slict.lk -> "ceylon-paradise"
+     *   - hotel.slict.lk             -> "ceylon-paradise" (demo fallback)
+     * 
+     * Local Development:
+     *   - localhost?subdomain=hilton -> "hilton"
      */
     getSubdomain: function () {
         const hostname = window.location.hostname;
@@ -35,25 +42,32 @@ const CONFIG = {
             return 'ceylon-paradise';
         }
 
-        // Production: extract subdomain from hostname
-        // e.g., "ceylon-paradise.hotels.myservice.com" -> "ceylon-paradise"
+        // Production: Parse hostname
+        // Expected formats:
+        //   - "hilton.hotel.slict.lk" (4 parts) -> tenant = "hilton"
+        //   - "hotel.slict.lk" (3 parts) -> demo site
         const parts = hostname.split('.');
-        if (parts.length >= 2) {
-            // First part is the subdomain
-            const subdomain = parts[0];
 
-            // SPECIAL CASE: 'hotel' is the generic subdomain for the main landing page
-            // We alias it to our demo tenant 'ceylon-paradise' so visitors see a working example
-            if (subdomain === 'hotel') {
-                return 'ceylon-paradise';
-            }
-
-            return subdomain;
+        // Case: hilton.hotel.slict.lk (4+ parts)
+        // parts = ['hilton', 'hotel', 'slict', 'lk']
+        if (parts.length >= 4 && parts[1] === 'hotel') {
+            const tenantSubdomain = parts[0];
+            console.log(`[Config] Tenant subdomain detected: ${tenantSubdomain}`);
+            return tenantSubdomain;
         }
 
-        // Custom domain case: look for subdomain via HTTP header (requires server-side setup)
-        // For now, fallback to the full hostname as tenant identifier
-        return hostname;
+        // Case: hotel.slict.lk (3 parts) - Main demo/landing page
+        // parts = ['hotel', 'slict', 'lk']
+        if (parts.length === 3 && parts[0] === 'hotel') {
+            console.log('[Config] Main demo site detected, using ceylon-paradise');
+            return 'ceylon-paradise';
+        }
+
+        // Fallback: Custom domain (e.g., www.hilton-colombo.com)
+        // For custom domains, we'd need server-side header injection
+        // For now, use the first part as tenant identifier
+        console.warn(`[Config] Unknown domain pattern: ${hostname}. Using first part as tenant.`);
+        return parts[0];
     }
 };
 
