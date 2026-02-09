@@ -12,7 +12,7 @@ interface RoomCardProps {
     room: {
         id: string;
         name: string;
-        description: string;
+        description: string | null | undefined;
         price?: number;
         basePrice?: number;
         image?: string;
@@ -44,7 +44,7 @@ export function RoomCard({ tenantId, room }: RoomCardProps) {
 
             <CardContent className="flex-grow">
                 <p className="text-muted-foreground text-sm line-clamp-3 mb-4">
-                    {room.description}
+                    {room.description || "No description available."}
                 </p>
 
                 <div className="flex gap-4 text-muted-foreground text-sm">

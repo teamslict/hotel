@@ -4,28 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1e88d3fe-a726-4848-9b7e-ba781000845d" name="Changes" comment="feat: Add events page with dynamic fetching and fallback data, enhance localization support">
-      <change afterPath="$PROJECT_DIR$/src/app/[tenant]/book/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/messages/ar.json" beforeDir="false" afterPath="$PROJECT_DIR$/messages/ar.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/messages/en.json" beforeDir="false" afterPath="$PROJECT_DIR$/messages/en.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/messages/si.json" beforeDir="false" afterPath="$PROJECT_DIR$/messages/si.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/messages/ta.json" beforeDir="false" afterPath="$PROJECT_DIR$/messages/ta.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/[tenant]/dining/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/[tenant]/dining/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/[tenant]/events/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/[tenant]/events/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/[tenant]/experiences/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/[tenant]/experiences/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/[tenant]/rooms/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/[tenant]/rooms/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/globals.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/booking/BookingWidget.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/booking/BookingWidget.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/booking/RoomCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/booking/RoomCard.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/contact/ContactForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/contact/ContactForm.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/home/FeaturedRooms.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/home/FeaturedRooms.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/layout/Footer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/layout/Footer.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/layout/Header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/layout/Header.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/layout/LanguageSwitcher.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/layout/LanguageSwitcher.tsx" afterDir="false" />
-    </list>
+    <list default="true" id="1e88d3fe-a726-4848-9b7e-ba781000845d" name="Changes" comment="feat: Integrate Inter font into layout for improved typography" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -110,7 +89,7 @@
       <option name="presentableId" value="Default" />
       <updated>1770543686279</updated>
       <workItem from="1770543687946" duration="1412000" />
-      <workItem from="1770644886068" duration="1266000" />
+      <workItem from="1770644886068" duration="1347000" />
     </task>
     <task id="LOCAL-00001" summary="feat: Enhance Next.js configuration with remote image patterns and add new dining and experiences pages">
       <option name="closed" value="true" />
@@ -120,7 +99,23 @@
       <option name="project" value="LOCAL" />
       <updated>1770549869949</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="feat: Add events page with dynamic fetching and fallback data, enhance localization support">
+      <option name="closed" value="true" />
+      <created>1770646296575</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1770646296575</updated>
+    </task>
+    <task id="LOCAL-00003" summary="feat: Integrate Inter font into layout for improved typography">
+      <option name="closed" value="true" />
+      <created>1770646329900</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1770646329900</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -129,7 +124,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="feat: Enhance Next.js configuration with remote image patterns and add new dining and experiences pages" />
     <MESSAGE value="feat: Add events page with dynamic fetching and fallback data, enhance localization support" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: Add events page with dynamic fetching and fallback data, enhance localization support" />
+    <MESSAGE value="feat: Integrate Inter font into layout for improved typography" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: Integrate Inter font into layout for improved typography" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>
