@@ -1,7 +1,10 @@
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
 import React from 'react';
+import { Inter } from "next/font/google"; // Import Inter font
 import "./globals.css";
+
+const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata = {
     title: 'Ceylon Paradise Resort',
@@ -19,7 +22,7 @@ export default async function RootLayout({
 
     return (
         <html lang={locale} dir={locale === 'ar' ? 'rtl' : 'ltr'}>
-            <body className="antialiased min-h-screen bg-background font-sans text-foreground">
+            <body className={`${inter.variable} antialiased min-h-screen bg-background font-sans text-foreground`}>
                 <NextIntlClientProvider messages={messages}>
                     {children}
                 </NextIntlClientProvider>
