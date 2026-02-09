@@ -23,6 +23,17 @@ export function BookingWidget({ tenantId }: { tenantId: string }) {
         to: addDays(new Date(), 2),
     });
     const [guests, setGuests] = React.useState({ adults: 2, children: 0 });
+    const [isMobile, setIsMobile] = React.useState(false);
+
+    // Detect mobile screen for responsive calendar
+    React.useEffect(() => {
+        const mediaQuery = window.matchMedia("(max-width: 768px)");
+        setIsMobile(mediaQuery.matches);
+
+        const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+        mediaQuery.addEventListener("change", handler);
+        return () => mediaQuery.removeEventListener("change", handler);
+    }, []);
 
     const handleSearch = () => {
         if (!date?.from || !date?.to) return;
@@ -73,7 +84,7 @@ export function BookingWidget({ tenantId }: { tenantId: string }) {
                             defaultMonth={date?.from}
                             selected={date}
                             onSelect={setDate}
-                            numberOfMonths={2}
+                            numberOfMonths={isMobile ? 1 : 2}
                             disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
                         />
                     </PopoverContent>

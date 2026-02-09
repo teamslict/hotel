@@ -37,7 +37,8 @@ export default function RoomsPage() {
     useEffect(() => {
         const fetchRooms = async () => {
             try {
-                const res = await fetch(`http://localhost:3000/api/hotel/room-types?tenantId=${tenant}`);
+                const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+                const res = await fetch(`${apiUrl}/api/public/hotel/room-types?tenantId=${tenant}`);
                 if (res.ok) {
                     const data = await res.json();
                     setRooms(data);
@@ -138,16 +139,16 @@ export default function RoomsPage() {
             {/* FILTER BAR */}
             <section className="sticky top-20 z-30 bg-white/80 backdrop-blur-lg border-b border-slate-200 shadow-sm">
                 <div className="container mx-auto px-4 py-4">
-                    <div className="flex flex-wrap items-center justify-between gap-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                         <div className="flex items-center gap-2 text-slate-600">
                             <Filter className="w-5 h-5" />
                             <span className="font-medium">Filter by:</span>
                         </div>
-                        <div className="flex flex-wrap items-center gap-6">
+                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-6">
                             <div className="flex items-center gap-2">
-                                <label className="text-sm text-slate-500">Price:</label>
+                                <label className="text-sm text-slate-500 whitespace-nowrap">Price:</label>
                                 <select
-                                    className="px-3 py-1.5 rounded-full border border-slate-200 text-sm bg-white focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500"
+                                    className="flex-1 px-4 py-2.5 rounded-full border border-slate-200 text-sm bg-white focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 min-h-[44px]"
                                     onChange={(e) => {
                                         const [min, max] = e.target.value.split("-").map(Number);
                                         setFilter((f) => ({ ...f, minPrice: min, maxPrice: max }));
@@ -160,9 +161,9 @@ export default function RoomsPage() {
                                 </select>
                             </div>
                             <div className="flex items-center gap-2">
-                                <label className="text-sm text-slate-500">Guests:</label>
+                                <label className="text-sm text-slate-500 whitespace-nowrap">Guests:</label>
                                 <select
-                                    className="px-3 py-1.5 rounded-full border border-slate-200 text-sm bg-white focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500"
+                                    className="flex-1 px-4 py-2.5 rounded-full border border-slate-200 text-sm bg-white focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 min-h-[44px]"
                                     onChange={(e) => setFilter((f) => ({ ...f, capacity: Number(e.target.value) }))}
                                 >
                                     <option value="0">Any</option>
@@ -172,7 +173,7 @@ export default function RoomsPage() {
                                 </select>
                             </div>
                         </div>
-                        <span className="text-sm text-slate-500">
+                        <span className="text-sm text-slate-500 text-center sm:text-right">
                             {filteredRooms.length} {filteredRooms.length === 1 ? "room" : "rooms"} available
                         </span>
                     </div>

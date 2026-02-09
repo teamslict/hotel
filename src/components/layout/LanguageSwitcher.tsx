@@ -12,7 +12,13 @@ import { Button } from "@/components/ui/button";
 import { Globe } from "lucide-react";
 import { startTransition } from "react";
 
-export function LanguageSwitcher() {
+import { cn } from "@/lib/utils";
+
+interface LanguageSwitcherProps {
+    isScrolled?: boolean;
+}
+
+export function LanguageSwitcher({ isScrolled = false }: LanguageSwitcherProps) {
     const locale = useLocale();
     const router = useRouter();
     const pathname = usePathname();
@@ -33,7 +39,16 @@ export function LanguageSwitcher() {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="text-foreground/80 hover:text-foreground">
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    className={cn(
+                        "transition-colors",
+                        isScrolled
+                            ? "text-foreground/80 hover:text-foreground"
+                            : "text-white/90 hover:text-white hover:bg-white/20"
+                    )}
+                >
                     <Globe className="h-5 w-5" />
                     <span className="sr-only">Toggle Language</span>
                 </Button>

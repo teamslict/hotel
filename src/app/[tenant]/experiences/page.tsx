@@ -1,80 +1,127 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import {
     Sparkles, Heart, Mountain, Palmtree, Music, Camera,
-    ChevronRight, Clock, Star, ArrowRight, Calendar
+    ChevronRight, Clock, Star, ArrowRight, Calendar, Loader2,
+    LucideIcon
 } from "lucide-react";
 
-const EXPERIENCES = [
+interface Experience {
+    id: string;
+    name: string;
+    slug: string;
+    category: string;
+    description: string | null;
+    duration: string | null;
+    price: number;
+    images: string[];
+    includes: string[];
+    requirements: string | null;
+    maxParticipants: number | null;
+    isActive: boolean;
+    isFeatured: boolean;
+    sortOrder: number;
+}
+
+const CATEGORY_ICONS: Record<string, LucideIcon> = {
+    "Wellness": Heart,
+    "Adventure": Mountain,
+    "Leisure": Palmtree,
+    "Entertainment": Music,
+    "Memories": Camera,
+    "Culture": Sparkles,
+};
+
+const FALLBACK_EXPERIENCES: Experience[] = [
     {
         id: "spa",
-        category: "Wellness",
         name: "Serenity Spa",
-        tagline: "Rejuvenate Your Senses",
+        slug: "serenity-spa",
+        category: "Wellness",
         description: "Indulge in our world-class spa featuring ancient healing traditions and modern therapeutic techniques. From signature massages to holistic treatments.",
-        image: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=800&q=80",
         duration: "60-120 min",
-        price: "From $150",
-        featured: true,
-        icon: Heart,
+        price: 150,
+        images: ["https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=800&q=80"],
+        includes: ["Aromatherapy", "Hot Stone Massage"],
+        requirements: null,
+        maxParticipants: 2,
+        isActive: true,
+        isFeatured: true,
+        sortOrder: 0
     },
     {
         id: "tours",
-        category: "Adventure",
         name: "Local Discoveries",
-        tagline: "Explore Hidden Gems",
+        slug: "local-discoveries",
+        category: "Adventure",
         description: "Curated excursions led by expert guides. From cultural heritage tours to off-the-beaten-path adventures in the surrounding region.",
-        image: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&q=80",
         duration: "Half/Full Day",
-        price: "From $95",
-        featured: false,
-        icon: Mountain,
+        price: 95,
+        images: ["https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&q=80"],
+        includes: ["Guide", "Transport", "Lunch"],
+        requirements: null,
+        maxParticipants: 12,
+        isActive: true,
+        isFeatured: false,
+        sortOrder: 1
     },
     {
         id: "beach",
-        category: "Leisure",
         name: "Beach Club",
-        tagline: "Sun, Sand & Luxury",
+        slug: "beach-club",
+        category: "Leisure",
         description: "Private beach access with premium loungers, water sports, and attentive service. Perfect for a day of relaxation or adventure.",
-        image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80",
         duration: "All Day",
-        price: "Complimentary",
-        featured: false,
-        icon: Palmtree,
+        price: 0,
+        images: ["https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80"],
+        includes: ["Lounger", "Towels", "Water Sports"],
+        requirements: null,
+        maxParticipants: null,
+        isActive: true,
+        isFeatured: false,
+        sortOrder: 2
     },
     {
         id: "events",
-        category: "Entertainment",
         name: "Live Events",
-        tagline: "Unforgettable Nights",
+        slug: "live-events",
+        category: "Entertainment",
         description: "Weekly live music, cultural performances, and themed evenings. From jazz nights to traditional dance shows.",
-        image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&q=80",
         duration: "Evening",
-        price: "Free Entry",
-        featured: false,
-        icon: Music,
+        price: 0,
+        images: ["https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&q=80"],
+        includes: ["Entry", "Welcome Drink"],
+        requirements: null,
+        maxParticipants: null,
+        isActive: true,
+        isFeatured: false,
+        sortOrder: 3
     },
     {
         id: "photography",
-        category: "Memories",
         name: "Photo Sessions",
-        tagline: "Capture the Moment",
+        slug: "photo-sessions",
+        category: "Memories",
         description: "Professional photography services for couples, families, or special occasions. Scenic locations throughout the property.",
-        image: "https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=800&q=80",
         duration: "1-2 hours",
-        price: "From $299",
-        featured: false,
-        icon: Camera,
+        price: 299,
+        images: ["https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=800&q=80"],
+        includes: ["Digital Photos", "Editing", "Album"],
+        requirements: null,
+        maxParticipants: 6,
+        isActive: true,
+        isFeatured: false,
+        sortOrder: 4
     },
 ];
 
 const UPCOMING_EVENTS = [
-    { date: "Feb 14", title: "Valentine\u2019s Dinner", venue: "Grand Pavilion" },
+    { date: "Feb 14", title: "Valentine's Dinner", venue: "Grand Pavilion" },
     { date: "Feb 20", title: "Jazz Night", venue: "Sky Lounge" },
     { date: "Mar 1", title: "Wine Tasting", venue: "The Cellar" },
 ];
@@ -82,20 +129,64 @@ const UPCOMING_EVENTS = [
 export default function ExperiencesPage() {
     const params = useParams();
     const tenant = params.tenant as string;
-    const heroRef = useRef(null);
-    const { scrollYProgress } = useScroll({
-        target: heroRef,
-        offset: ["start start", "end start"],
-    });
-    const heroScale = useTransform(scrollYProgress, [0, 1], [1, 1.2]);
+    const { scrollY } = useScroll();
+    const heroScale = useTransform(scrollY, [0, 500], [1, 1.2]);
 
-    const featured = EXPERIENCES.find((e) => e.featured);
-    const others = EXPERIENCES.filter((e) => !e.featured);
+    const [experiences, setExperiences] = useState<Experience[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        async function fetchExperiences() {
+            try {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/api/public/hotel/experiences?tenantId=${tenant}`);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.length > 0) {
+                        setExperiences(data);
+                    } else {
+                        setExperiences(FALLBACK_EXPERIENCES);
+                    }
+                } else {
+                    setExperiences(FALLBACK_EXPERIENCES);
+                }
+            } catch (error) {
+                console.error('Error fetching experiences:', error);
+                setExperiences(FALLBACK_EXPERIENCES);
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetchExperiences();
+    }, [tenant]);
+
+    const featured = experiences.find((e) => e.isFeatured) || experiences[0];
+    const others = experiences.filter((e) => e.id !== featured?.id);
+
+    const getImage = (exp: Experience) => {
+        return exp.images?.[0] || 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=800&q=80';
+    };
+
+    const formatPrice = (price: number) => {
+        if (price === 0) return 'Complimentary';
+        return `From $${price}`;
+    };
+
+    const getIcon = (category: string) => {
+        return CATEGORY_ICONS[category] || Sparkles;
+    };
+
+    if (loading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <Loader2 className="w-8 h-8 animate-spin text-teal-500" />
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-teal-50 to-white">
             {/* HERO SECTION */}
-            <section ref={heroRef} className="relative h-[80vh] overflow-hidden">
+            <section className="relative h-[80vh] overflow-hidden">
                 <motion.div style={{ scale: heroScale }} className="absolute inset-0">
                     <Image
                         src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=1600&q=80"
@@ -168,7 +259,7 @@ export default function ExperiencesPage() {
                             <div className="absolute -inset-4 bg-gradient-to-br from-teal-100 to-amber-100 rounded-3xl -z-10" />
                             <div className="relative h-[500px] rounded-2xl overflow-hidden shadow-2xl">
                                 <Image
-                                    src={featured.image}
+                                    src={getImage(featured)}
                                     alt={featured.name}
                                     fill
                                     className="object-cover"
@@ -188,7 +279,10 @@ export default function ExperiencesPage() {
                         >
                             <div className="flex items-center gap-3 mb-4">
                                 <div className="w-12 h-12 rounded-full bg-teal-100 flex items-center justify-center">
-                                    <featured.icon className="w-6 h-6 text-teal-600" />
+                                    {(() => {
+                                        const IconComponent = getIcon(featured.category);
+                                        return <IconComponent className="w-6 h-6 text-teal-600" />;
+                                    })()}
                                 </div>
                                 <span className="text-teal-600 uppercase tracking-wider text-sm font-medium">
                                     {featured.category}
@@ -197,7 +291,7 @@ export default function ExperiencesPage() {
                             <h2 className="text-4xl md:text-5xl font-serif text-slate-800 mb-4">
                                 {featured.name}
                             </h2>
-                            <p className="text-xl text-teal-600 mb-6">{featured.tagline}</p>
+                            <p className="text-xl text-teal-600 mb-6">Rejuvenate Your Senses</p>
                             <p className="text-slate-600 text-lg mb-8 leading-relaxed">
                                 {featured.description}
                             </p>
@@ -207,25 +301,28 @@ export default function ExperiencesPage() {
                                     <Clock className="w-5 h-5 text-teal-500" />
                                     <div>
                                         <p className="text-xs text-slate-400 uppercase">Duration</p>
-                                        <p className="font-medium">{featured.duration}</p>
+                                        <p className="font-medium">{featured.duration || 'Flexible'}</p>
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-3 text-slate-600">
                                     <Sparkles className="w-5 h-5 text-amber-500" />
                                     <div>
                                         <p className="text-xs text-slate-400 uppercase">Starting</p>
-                                        <p className="font-medium">{featured.price}</p>
+                                        <p className="font-medium">{formatPrice(featured.price)}</p>
                                     </div>
                                 </div>
                             </div>
-
-                            <Link href={`/${tenant}/book?experience=${featured.id}`}>
-                                <button className="px-8 py-4 bg-gradient-to-r from-teal-500 to-teal-600 text-white rounded-full font-medium hover:from-teal-600 hover:to-teal-700 transition-all flex items-center gap-2 shadow-lg hover:shadow-xl group">
-                                    <Calendar className="w-5 h-5" />
-                                    Book This Experience
-                                    <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                            <div className="flex flex-wrap gap-4">
+                                <Link href={`/${tenant}/book?service=experience&experienceId=${featured.id}`}>
+                                    <button className="px-8 py-4 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-full font-medium hover:from-amber-600 hover:to-amber-700 transition-all flex items-center gap-2 shadow-lg hover:shadow-xl">
+                                        <Calendar className="w-5 h-5" />
+                                        Book Experience
+                                    </button>
+                                </Link>
+                                <button className="px-8 py-4 border-2 border-stone-300 text-stone-700 rounded-full font-medium hover:border-amber-500 hover:text-amber-600 transition-all">
+                                    View Details
                                 </button>
-                            </Link>
+                            </div>
                         </motion.div>
                     </div>
                 </section>
@@ -254,43 +351,52 @@ export default function ExperiencesPage() {
                     </div>
 
                     <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        {others.map((exp, index) => (
-                            <motion.div
-                                key={exp.id}
-                                initial={{ opacity: 0, y: 40 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: index * 0.1 }}
-                                className="group"
-                            >
-                                <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 h-full flex flex-col">
-                                    <div className="relative h-48 overflow-hidden">
-                                        <Image
-                                            src={exp.image}
-                                            alt={exp.name}
-                                            fill
-                                            className="object-cover group-hover:scale-110 transition-transform duration-700"
-                                        />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                                        <div className="absolute top-4 left-4 w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center">
-                                            <exp.icon className="w-5 h-5 text-teal-600" />
+                        {others.map((exp, index) => {
+                            const IconComponent = getIcon(exp.category);
+                            return (
+                                <motion.div
+                                    key={exp.id}
+                                    initial={{ opacity: 0, y: 40 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ delay: index * 0.1 }}
+                                    className="group"
+                                >
+                                    <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 h-full flex flex-col">
+                                        <div className="relative h-48 overflow-hidden">
+                                            <Image
+                                                src={getImage(exp)}
+                                                alt={exp.name}
+                                                fill
+                                                className="object-cover group-hover:scale-110 transition-transform duration-700"
+                                            />
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                                            <div className="absolute top-4 left-4 w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center">
+                                                <IconComponent className="w-5 h-5 text-teal-600" />
+                                            </div>
+                                        </div>
+                                        <div className="p-5 flex-grow flex flex-col">
+                                            <span className="text-xs text-teal-500 uppercase tracking-wider">{exp.category}</span>
+                                            <h3 className="text-lg font-serif font-medium text-slate-800 mt-1">{exp.name}</h3>
+                                            <p className="text-slate-500 text-sm mt-2 line-clamp-2 flex-grow">{exp.description}</p>
+                                            <div className="flex items-center justify-between mt-4 pt-4 border-t border-slate-100 text-sm">
+                                                <span className="text-slate-400 flex items-center gap-1">
+                                                    <Clock className="w-4 h-4" />
+                                                    {exp.duration || 'Flexible'}
+                                                </span>
+                                                <span className="font-medium text-teal-600">{formatPrice(exp.price)}</span>
+                                            </div>
+                                            <Link href={`/${tenant}/book?service=experience&experienceId=${exp.id}`} className="mt-4">
+                                                <button className="w-full py-3 border-2 border-teal-500 text-teal-600 rounded-xl font-medium hover:bg-teal-500 hover:text-white transition-all flex items-center justify-center gap-2">
+                                                    Book Now
+                                                    <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                                </button>
+                                            </Link>
                                         </div>
                                     </div>
-                                    <div className="p-5 flex-grow flex flex-col">
-                                        <span className="text-xs text-teal-500 uppercase tracking-wider">{exp.category}</span>
-                                        <h3 className="text-lg font-serif font-medium text-slate-800 mt-1">{exp.name}</h3>
-                                        <p className="text-slate-500 text-sm mt-2 line-clamp-2 flex-grow">{exp.description}</p>
-                                        <div className="flex items-center justify-between mt-4 pt-4 border-t border-slate-100 text-sm">
-                                            <span className="text-slate-400 flex items-center gap-1">
-                                                <Clock className="w-4 h-4" />
-                                                {exp.duration}
-                                            </span>
-                                            <span className="font-medium text-teal-600">{exp.price}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </motion.div>
-                        ))}
+                                </motion.div>
+                            );
+                        })}
                     </div>
                 </div>
             </section>

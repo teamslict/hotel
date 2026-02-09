@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useTranslations } from "next-intl";
+import { useParams, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
     Form,
@@ -27,8 +28,14 @@ const formSchema = z.object({
 
 export function ContactForm() {
     const t = useTranslations("contact");
+    const params = useParams();
+    const searchParams = useSearchParams();
+    const tenant = params.tenant as string;
+    const inquiryType = searchParams.get('inquiry') || 'General';
+
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [success, setSuccess] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -43,11 +50,38 @@ export function ContactForm() {
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         setIsSubmitting(true);
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        setSuccess(true);
-        setIsSubmitting(false);
-        form.reset();
+        setError(null);
+
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/api/public/hotel/contact`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    tenantId: tenant,
+                    firstName: values.firstName,
+                    lastName: values.lastName,
+                    email: values.email,
+                    phone: values.phone,
+                    message: values.message,
+                    inquiryType: inquiryType,
+                }),
+            });
+
+            if (response.ok) {
+                setSuccess(true);
+                form.reset();
+            } else {
+                const data = await response.json();
+                setError(data.error || 'Failed to send message. Please try again.');
+            }
+        } catch (err) {
+            console.error('Error submitting contact form:', err);
+            setError('Failed to send message. Please try again later.');
+        } finally {
+            setIsSubmitting(false);
+        }
     }
 
     if (success) {
@@ -76,7 +110,7 @@ export function ContactForm() {
                                 <FormItem>
                                     <FormLabel>{t("name")}</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="First Name" {...field} />
+                                        <Input placeholder="First Name" autoComplete="given-name" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -89,7 +123,7 @@ export function ContactForm() {
                                 <FormItem>
                                     <FormLabel>{t("name")}</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Last Name" {...field} />
+                                        <Input placeholder="Last Name" autoComplete="family-name" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -105,7 +139,7 @@ export function ContactForm() {
                                 <FormItem>
                                     <FormLabel>{t("email")}</FormLabel>
                                     <FormControl>
-                                        <Input type="email" placeholder="john@example.com" {...field} />
+                                        <Input type="email" inputMode="email" autoComplete="email" placeholder="john@example.com" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -118,7 +152,7 @@ export function ContactForm() {
                                 <FormItem>
                                     <FormLabel>{t("phone")}</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="+1 234 567 890" {...field} />
+                                        <Input type="tel" inputMode="tel" autoComplete="tel" placeholder="+1 234 567 890" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
