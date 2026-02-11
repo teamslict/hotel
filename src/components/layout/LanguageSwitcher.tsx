@@ -43,10 +43,10 @@ export function LanguageSwitcher({ isScrolled = false }: LanguageSwitcherProps) 
                     variant="ghost"
                     size="icon"
                     className={cn(
-                        "transition-colors",
+                        "transition-all duration-300 hover:scale-110",
                         isScrolled
-                            ? "text-foreground/80 hover:text-foreground"
-                            : "text-white/90 hover:text-white hover:bg-white/20"
+                            ? "text-white hover:bg-white/10"
+                            : "text-slate-900 hover:bg-slate-100"
                     )}
                 >
                     <Globe className="h-5 w-5" />

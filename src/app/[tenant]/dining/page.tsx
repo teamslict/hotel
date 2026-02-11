@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { Clock, MapPin, Phone, Utensils, Wine, Coffee, ChevronRight, Star, Calendar, Loader2 } from "lucide-react";
+import { hotelApi } from "@/lib/api";
 
 interface DiningVenue {
     id: string;
@@ -105,12 +106,25 @@ export default function DiningPage() {
     const heroOpacity = useTransform(scrollY, [0, 300], [1, 0.3]);
 
     const [venues, setVenues] = useState<DiningVenue[]>([]);
+    const [config, setConfig] = useState<any>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        async function fetchVenues() {
+        async function fetchData() {
             try {
-                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/api/public/hotel/dining?tenantId=${tenant}`);
+                // Fetch Config
+                try {
+                    const configData = await hotelApi.getConfig(tenant);
+                    if (configData && configData.config) {
+                        setConfig(configData.config);
+                    }
+                } catch (e) {
+                    console.error("Error fetching config", e);
+                }
+
+                const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+                const baseUrl = apiUrl === "" ? 'http://localhost:3000' : apiUrl;
+                const res = await fetch(`${baseUrl}/api/public/hotel/dining?tenantId=${tenant}`);
                 if (res.ok) {
                     const data = await res.json();
                     if (data.length > 0) {
@@ -128,7 +142,7 @@ export default function DiningPage() {
                 setLoading(false);
             }
         }
-        fetchVenues();
+        fetchData();
     }, [tenant]);
 
     const featuredVenue = venues.find(v => v.isFeatured) || venues[0];
@@ -156,11 +170,11 @@ export default function DiningPage() {
     return (
         <div className="min-h-screen bg-gradient-to-b from-stone-50 to-white">
             {/* HERO SECTION */}
-            <section className="relative h-[70vh] overflow-hidden">
+            <section className="relative h-[50vh] md:h-[70vh] overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-stone-50 z-10" />
                 <motion.div style={{ y: heroY, opacity: heroOpacity }} className="absolute inset-0">
                     <Image
-                        src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1600&q=80"
+                        src={config?.diningHeroImage || "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1600&q=80"}
                         alt="Fine Dining"
                         fill
                         className="object-cover"
@@ -174,7 +188,7 @@ export default function DiningPage() {
                         transition={{ delay: 0.2 }}
                         className="mb-6"
                     >
-                        <Utensils className="w-12 h-12 text-amber-400 mx-auto" />
+                        <Utensils className="w-8 h-8 md:w-12 md:h-12 text-amber-400 mx-auto" />
                     </motion.div>
                     <motion.span
                         initial={{ opacity: 0, y: 20 }}
@@ -188,24 +202,24 @@ export default function DiningPage() {
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.4 }}
-                        className="text-5xl md:text-7xl font-serif font-light mb-6"
+                        className="text-3xl sm:text-5xl md:text-7xl font-serif font-light mb-4 md:mb-6"
                     >
-                        Dining Experiences
+                        {config?.diningHeroTitle || "Dining Experiences"}
                     </motion.h1>
                     <motion.p
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.6 }}
-                        className="text-xl text-white/80 max-w-2xl"
+                        className="text-base md:text-xl text-white/80 max-w-2xl px-4"
                     >
-                        Embark on a gastronomic journey through our collection of world-class restaurants and bars.
+                        {config?.diningHeroSubtitle || "Embark on a gastronomic journey through our collection of world-class restaurants and bars."}
                     </motion.p>
                 </div>
             </section>
 
             {/* FEATURED RESTAURANT */}
             {featuredVenue && (
-                <section className="container mx-auto px-4 py-20">
+                <section className="container mx-auto px-4 py-12 md:py-20">
                     <div className="grid lg:grid-cols-2 gap-12 items-center">
                         <motion.div
                             initial={{ opacity: 0, x: -50 }}
@@ -215,7 +229,7 @@ export default function DiningPage() {
                             className="relative"
                         >
                             <div className="absolute -top-4 -left-4 w-full h-full border-2 border-amber-400 rounded-2xl" />
-                            <div className="relative h-[500px] rounded-2xl overflow-hidden shadow-2xl">
+                            <div className="relative h-[280px] md:h-[500px] rounded-2xl overflow-hidden shadow-2xl">
                                 <Image
                                     src={getImage(featuredVenue)}
                                     alt={featuredVenue.name}
@@ -239,10 +253,10 @@ export default function DiningPage() {
                             <span className="text-amber-600 uppercase tracking-wider text-sm font-medium">
                                 {featuredVenue.priceRange || 'Fine Dining'}
                             </span>
-                            <h2 className="text-4xl md:text-5xl font-serif text-stone-800 mt-2 mb-6">
+                            <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif text-stone-800 mt-2 mb-4 md:mb-6">
                                 {featuredVenue.name}
                             </h2>
-                            <p className="text-stone-600 text-lg mb-8 leading-relaxed">
+                            <p className="text-stone-600 text-base md:text-lg mb-6 md:mb-8 leading-relaxed">
                                 {featuredVenue.description}
                             </p>
 
@@ -287,7 +301,7 @@ export default function DiningPage() {
 
             {/* OTHER VENUES */}
             {otherVenues.length > 0 && (
-                <section className="bg-stone-100 py-20">
+                <section className="bg-stone-100 py-12 md:py-20">
                     <div className="container mx-auto px-4">
                         <div className="text-center mb-16">
                             <motion.span
@@ -308,7 +322,7 @@ export default function DiningPage() {
                             </motion.h2>
                         </div>
 
-                        <div className="grid md:grid-cols-3 gap-8">
+                        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
                             {otherVenues.map((venue, index) => (
                                 <motion.div
                                     key={venue.id}
@@ -319,7 +333,7 @@ export default function DiningPage() {
                                     className="group"
                                 >
                                     <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500">
-                                        <div className="relative h-56 overflow-hidden">
+                                        <div className="relative h-44 md:h-56 overflow-hidden">
                                             <Image
                                                 src={getImage(venue)}
                                                 alt={venue.name}
@@ -357,7 +371,7 @@ export default function DiningPage() {
             )}
 
             {/* PRIVATE DINING CTA */}
-            <section className="relative py-24 overflow-hidden">
+            <section className="relative py-16 md:py-24 overflow-hidden">
                 <div className="absolute inset-0">
                     <Image
                         src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1600&q=80"
@@ -375,7 +389,7 @@ export default function DiningPage() {
                             viewport={{ once: true }}
                         >
                             <Wine className="w-12 h-12 text-amber-400 mx-auto mb-6" />
-                            <h2 className="text-4xl font-serif text-white mb-4">Private Dining</h2>
+                            <h2 className="text-3xl md:text-4xl font-serif text-white mb-4">Private Dining</h2>
                             <p className="text-stone-300 mb-8">
                                 Host an unforgettable event in our exclusive private dining rooms. From intimate celebrations to corporate gatherings, we create bespoke experiences.
                             </p>

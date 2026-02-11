@@ -15,6 +15,11 @@ interface RoomType {
     maxOccupancy: number;
     amenities: string[];
     images: string[];
+    bedType?: string | null;
+    sizeSqM?: number | null;
+    totalRooms?: number;
+    availableRooms?: number;
+    slug?: string;
 }
 
 const AMENITY_ICONS: Record<string, React.ReactNode> = {
@@ -32,13 +37,16 @@ export default function RoomsPage() {
     const tenant = params.tenant as string;
     const [rooms, setRooms] = useState<RoomType[]>([]);
     const [loading, setLoading] = useState(true);
-    const [filter, setFilter] = useState({ minPrice: 0, maxPrice: 1000, capacity: 0 });
+    const [filter, setFilter] = useState({ minPrice: 0, maxPrice: 5000, capacity: 0 });
 
     useEffect(() => {
         const fetchRooms = async () => {
             try {
                 const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
-                const res = await fetch(`${apiUrl}/api/public/hotel/room-types?tenantId=${tenant}`);
+                // Robust fallback if env var is somehow empty string
+                const baseUrl = apiUrl === "" ? 'http://localhost:3000' : apiUrl;
+
+                const res = await fetch(`${baseUrl}/api/public/hotel/room-types?tenantId=${tenant}`);
                 if (res.ok) {
                     const data = await res.json();
                     setRooms(data);
@@ -82,6 +90,8 @@ export default function RoomsPage() {
         fetchRooms();
     }, [tenant]);
 
+
+
     const filteredRooms = rooms.filter(
         (room) =>
             room.basePrice >= filter.minPrice &&
@@ -92,7 +102,7 @@ export default function RoomsPage() {
     return (
         <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
             {/* HERO SECTION */}
-            <section className="relative h-[60vh] overflow-hidden">
+            <section className="relative h-[50vh] md:h-[60vh] overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-transparent z-10" />
                 <motion.div
                     initial={{ scale: 1.1 }}
@@ -121,7 +131,7 @@ export default function RoomsPage() {
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.4 }}
-                        className="text-5xl md:text-7xl font-serif font-light mb-6"
+                        className="text-3xl sm:text-5xl md:text-7xl font-serif font-light mb-4 md:mb-6"
                     >
                         Our Rooms & Suites
                     </motion.h1>
@@ -129,7 +139,7 @@ export default function RoomsPage() {
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.6 }}
-                        className="text-xl text-white/80 max-w-2xl"
+                        className="text-base md:text-xl text-white/80 max-w-2xl px-4"
                     >
                         Discover refined elegance and unparalleled comfort in our carefully curated collection of luxury accommodations.
                     </motion.p>
@@ -137,8 +147,8 @@ export default function RoomsPage() {
             </section>
 
             {/* FILTER BAR */}
-            <section className="sticky top-20 z-30 bg-white/80 backdrop-blur-lg border-b border-slate-200 shadow-sm">
-                <div className="container mx-auto px-4 py-4">
+            <section className="sticky top-[5rem] z-30 bg-white border-b border-slate-200 shadow-sm">
+                <div className="container mx-auto px-4 py-3">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                         <div className="flex items-center gap-2 text-slate-600">
                             <Filter className="w-5 h-5" />
@@ -154,10 +164,10 @@ export default function RoomsPage() {
                                         setFilter((f) => ({ ...f, minPrice: min, maxPrice: max }));
                                     }}
                                 >
-                                    <option value="0-1000">All Prices</option>
+                                    <option value="0-5000">All Prices</option>
                                     <option value="0-300">Under $300</option>
                                     <option value="300-500">$300 - $500</option>
-                                    <option value="500-1000">$500+</option>
+                                    <option value="500-5000">$500+</option>
                                 </select>
                             </div>
                             <div className="flex items-center gap-2">
@@ -181,9 +191,9 @@ export default function RoomsPage() {
             </section>
 
             {/* ROOMS GRID */}
-            <section className="container mx-auto px-4 py-16">
+            <section className="container mx-auto px-4 py-8 md:py-16">
                 {loading ? (
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
                         {[1, 2, 3].map((i) => (
                             <div key={i} className="bg-slate-100 rounded-2xl h-[400px] animate-pulse" />
                         ))}
@@ -199,7 +209,7 @@ export default function RoomsPage() {
                         </button>
                     </div>
                 ) : (
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
                         {filteredRooms.map((room, index) => (
                             <motion.div
                                 key={room.id}
@@ -211,7 +221,7 @@ export default function RoomsPage() {
                             >
                                 <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 border border-slate-100">
                                     {/* Image */}
-                                    <div className="relative h-64 overflow-hidden">
+                                    <div className="relative h-48 md:h-64 overflow-hidden">
                                         <Image
                                             src={room.images?.[0] || PLACEHOLDER_IMAGE}
                                             alt={room.name}

@@ -19,6 +19,10 @@ interface Room {
     maxOccupancy: number;
     amenities: string[];
     slug: string;
+    bedType?: string | null;
+    sizeSqM?: number | null;
+    totalRooms?: number;
+    availableRooms?: number;
 }
 
 interface FeaturedRoomsProps {

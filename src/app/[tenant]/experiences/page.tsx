@@ -10,6 +10,7 @@ import {
     ChevronRight, Clock, Star, ArrowRight, Calendar, Loader2,
     LucideIcon
 } from "lucide-react";
+import { hotelApi } from "@/lib/api";
 
 interface Experience {
     id: string;
@@ -133,12 +134,25 @@ export default function ExperiencesPage() {
     const heroScale = useTransform(scrollY, [0, 500], [1, 1.2]);
 
     const [experiences, setExperiences] = useState<Experience[]>([]);
+    const [config, setConfig] = useState<any>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        async function fetchExperiences() {
+        async function fetchData() {
             try {
-                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/api/public/hotel/experiences?tenantId=${tenant}`);
+                // Fetch Config
+                try {
+                    const configData = await hotelApi.getConfig(tenant);
+                    if (configData && configData.config) {
+                        setConfig(configData.config);
+                    }
+                } catch (e) {
+                    console.error("Error fetching config", e);
+                }
+
+                const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+                const baseUrl = apiUrl === "" ? 'http://localhost:3000' : apiUrl;
+                const res = await fetch(`${baseUrl}/api/public/hotel/experiences?tenantId=${tenant}`);
                 if (res.ok) {
                     const data = await res.json();
                     if (data.length > 0) {
@@ -156,7 +170,7 @@ export default function ExperiencesPage() {
                 setLoading(false);
             }
         }
-        fetchExperiences();
+        fetchData();
     }, [tenant]);
 
     const featured = experiences.find((e) => e.isFeatured) || experiences[0];
@@ -186,10 +200,10 @@ export default function ExperiencesPage() {
     return (
         <div className="min-h-screen bg-gradient-to-b from-teal-50 to-white">
             {/* HERO SECTION */}
-            <section className="relative h-[80vh] overflow-hidden">
+            <section className="relative h-[60vh] md:h-[80vh] overflow-hidden">
                 <motion.div style={{ scale: heroScale }} className="absolute inset-0">
                     <Image
-                        src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=1600&q=80"
+                        src={config?.experienceHeroImage || "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=1600&q=80"}
                         alt="Hotel Experiences"
                         fill
                         className="object-cover"
@@ -205,7 +219,7 @@ export default function ExperiencesPage() {
                         transition={{ delay: 0.2 }}
                         className="mb-6"
                     >
-                        <Sparkles className="w-14 h-14 text-amber-400 mx-auto" />
+                        <Sparkles className="w-10 h-10 md:w-14 md:h-14 text-amber-400 mx-auto" />
                     </motion.div>
                     <motion.span
                         initial={{ opacity: 0, y: 20 }}
@@ -219,17 +233,17 @@ export default function ExperiencesPage() {
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.4 }}
-                        className="text-5xl md:text-7xl font-serif font-light mb-6"
+                        className="text-3xl sm:text-5xl md:text-7xl font-serif font-light mb-4 md:mb-6"
                     >
-                        Curated Experiences
+                        {config?.experienceHeroTitle || "Curated Experiences"}
                     </motion.h1>
                     <motion.p
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.6 }}
-                        className="text-xl text-white/80 max-w-2xl"
+                        className="text-base md:text-xl text-white/80 max-w-2xl px-4"
                     >
-                        Create lasting memories with our handpicked collection of activities, wellness retreats, and cultural journeys.
+                        {config?.experienceHeroSubtitle || "Create lasting memories with our handpicked collection of activities, wellness retreats, and cultural journeys."}
                     </motion.p>
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
@@ -247,8 +261,8 @@ export default function ExperiencesPage() {
 
             {/* FEATURED EXPERIENCE */}
             {featured && (
-                <section className="container mx-auto px-4 py-24">
-                    <div className="grid lg:grid-cols-2 gap-16 items-center">
+                <section className="container mx-auto px-4 py-12 md:py-24">
+                    <div className="grid lg:grid-cols-2 gap-8 md:gap-16 items-center">
                         <motion.div
                             initial={{ opacity: 0, scale: 0.95 }}
                             whileInView={{ opacity: 1, scale: 1 }}
@@ -257,7 +271,7 @@ export default function ExperiencesPage() {
                             className="relative"
                         >
                             <div className="absolute -inset-4 bg-gradient-to-br from-teal-100 to-amber-100 rounded-3xl -z-10" />
-                            <div className="relative h-[500px] rounded-2xl overflow-hidden shadow-2xl">
+                            <div className="relative h-[280px] md:h-[500px] rounded-2xl overflow-hidden shadow-2xl">
                                 <Image
                                     src={getImage(featured)}
                                     alt={featured.name}
@@ -288,7 +302,7 @@ export default function ExperiencesPage() {
                                     {featured.category}
                                 </span>
                             </div>
-                            <h2 className="text-4xl md:text-5xl font-serif text-slate-800 mb-4">
+                            <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif text-slate-800 mb-4">
                                 {featured.name}
                             </h2>
                             <p className="text-xl text-teal-600 mb-6">Rejuvenate Your Senses</p>
@@ -350,7 +364,7 @@ export default function ExperiencesPage() {
                         </motion.h2>
                     </div>
 
-                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                         {others.map((exp, index) => {
                             const IconComponent = getIcon(exp.category);
                             return (
@@ -405,11 +419,11 @@ export default function ExperiencesPage() {
             <section className="container mx-auto px-4 py-20">
                 <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl overflow-hidden shadow-2xl">
                     <div className="grid lg:grid-cols-2">
-                        <div className="p-12 lg:p-16">
+                        <div className="p-6 md:p-12 lg:p-16">
                             <span className="text-amber-400 uppercase tracking-wider text-sm font-medium">
                                 What&apos;s Happening
                             </span>
-                            <h2 className="text-4xl font-serif text-white mt-2 mb-8">
+                            <h2 className="text-3xl md:text-4xl font-serif text-white mt-2 mb-6 md:mb-8">
                                 Upcoming Events
                             </h2>
                             <div className="space-y-6">
@@ -441,7 +455,7 @@ export default function ExperiencesPage() {
                                 </button>
                             </Link>
                         </div>
-                        <div className="relative h-[400px] lg:h-auto">
+                        <div className="relative h-[250px] md:h-[400px] lg:h-auto">
                             <Image
                                 src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&q=80"
                                 alt="Events"
@@ -463,7 +477,7 @@ export default function ExperiencesPage() {
                     className="text-center max-w-3xl mx-auto"
                 >
                     <Sparkles className="w-12 h-12 text-amber-500 mx-auto mb-6" />
-                    <h2 className="text-4xl font-serif text-slate-800 mb-4">
+                    <h2 className="text-3xl md:text-4xl font-serif text-slate-800 mb-4">
                         Create Your Own Experience
                     </h2>
                     <p className="text-slate-600 text-lg mb-8">

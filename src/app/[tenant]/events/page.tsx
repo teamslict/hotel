@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { CalendarDays, MapPin, Calendar, Clock, ArrowRight, Loader2 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { hotelApi } from "@/lib/api";
 
 interface HotelEvent {
     id: string;
@@ -80,12 +81,25 @@ export default function EventsPage() {
     const params = useParams();
     const tenant = params.tenant as string;
     const [events, setEvents] = useState<HotelEvent[]>([]);
+    const [config, setConfig] = useState<any>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        async function fetchEvents() {
+        async function fetchData() {
             try {
-                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/api/public/hotel/events?tenantId=${tenant}`);
+                // Fetch Config
+                try {
+                    const configData = await hotelApi.getConfig(tenant);
+                    if (configData && configData.config) {
+                        setConfig(configData.config);
+                    }
+                } catch (e) {
+                    console.error("Error fetching config", e);
+                }
+
+                const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+                const baseUrl = apiUrl === "" ? 'http://localhost:3000' : apiUrl;
+                const res = await fetch(`${baseUrl}/api/public/hotel/events?tenantId=${tenant}`);
                 if (res.ok) {
                     const data = await res.json();
                     if (data.length > 0) {
@@ -103,7 +117,7 @@ export default function EventsPage() {
                 setLoading(false);
             }
         }
-        fetchEvents();
+        fetchData();
     }, [tenant]);
 
     const formatDate = (dateString: string) => {
@@ -125,11 +139,24 @@ export default function EventsPage() {
 
     return (
         <div className="min-h-screen bg-background pb-24">
-            <section className="bg-zinc-900 text-white py-20 mb-12">
-                <div className="container mx-auto px-4 text-center">
-                    <h1 className="text-4xl md:text-5xl font-serif font-bold mb-4">Events & Happenings</h1>
-                    <p className="text-xl text-zinc-400 max-w-2xl mx-auto">
-                        Discover exceptional experiences curated just for you.
+            <section className="relative bg-zinc-900 text-white py-12 md:py-20 mb-8 md:mb-12 overflow-hidden">
+                {config?.eventHeroImage && (
+                    <div className="absolute inset-0 z-0">
+                        <Image
+                            src={config.eventHeroImage}
+                            alt="Events Hero"
+                            fill
+                            className="object-cover opacity-40"
+                        />
+                        <div className="absolute inset-0 bg-black/50" />
+                    </div>
+                )}
+                <div className="container mx-auto px-4 text-center relative z-10">
+                    <h1 className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold mb-4">
+                        {config?.eventHeroTitle || "Events & Happenings"}
+                    </h1>
+                    <p className="text-base md:text-xl text-zinc-200 max-w-2xl mx-auto px-4">
+                        {config?.eventHeroSubtitle || "Discover exceptional experiences curated just for you."}
                     </p>
                 </div>
             </section>
@@ -142,10 +169,10 @@ export default function EventsPage() {
                         <p className="text-stone-500">Check back soon for new events and happenings!</p>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
                         {events.map((event) => (
                             <div key={event.id} className="group bg-card rounded-xl overflow-hidden border shadow-sm hover:shadow-xl transition-all duration-300">
-                                <div className="relative h-64 overflow-hidden">
+                                <div className="relative h-48 md:h-64 overflow-hidden">
                                     <Image
                                         src={getImage(event)}
                                         alt={event.title}
@@ -164,7 +191,7 @@ export default function EventsPage() {
                                     )}
                                 </div>
 
-                                <div className="p-6">
+                                <div className="p-4 md:p-6">
                                     <div className="flex items-center gap-4 text-sm text-stone-500 mb-6">
                                         <span className="flex items-center gap-2">
                                             <Calendar className="w-4 h-4 text-amber-500" />

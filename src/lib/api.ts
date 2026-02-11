@@ -24,7 +24,7 @@ export interface Room {
 
 export const hotelApi = {
     getConfig: async (tenant: string) => {
-        const res = await fetch(`${API_BASE}/api/public/hotel/config?tenantId=${tenant}`);
+        const res = await fetch(`${API_BASE}/api/public/hotel/config?subdomain=${tenant}`);
         if (!res.ok) throw new Error('Failed to fetch config');
         return res.json();
     },
