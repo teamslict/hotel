@@ -1,4 +1,7 @@
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+// Use Proxy path on client, direct URL on server
+export const API_BASE = typeof window === 'undefined'
+    ? (process.env.ERP_API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000')
+    : '/api/erp';
 
 export interface SearchParams {
     checkIn: string;

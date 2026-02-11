@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { RoomCard } from "@/components/booking/RoomCard";
+import { API_BASE } from "@/lib/api";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { Users, Wifi, Coffee, Tv, Bath, Wind, ChevronRight, Star, Filter } from "lucide-react";
@@ -42,9 +44,8 @@ export default function RoomsPage() {
     useEffect(() => {
         const fetchRooms = async () => {
             try {
-                const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
                 // Robust fallback if env var is somehow empty string
-                const baseUrl = apiUrl === "" ? 'http://localhost:3000' : apiUrl;
+                const baseUrl = API_BASE === "" ? 'http://localhost:3000' : API_BASE;
 
                 const res = await fetch(`${baseUrl}/api/public/hotel/room-types?tenantId=${tenant}`);
                 if (res.ok) {

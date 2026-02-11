@@ -9,6 +9,7 @@ import {
     CarouselPrevious,
 } from "@/components/ui/carousel";
 import { useEffect, useState } from "react";
+import { API_BASE } from "@/lib/api";
 
 interface Room {
     id: string;
@@ -36,8 +37,7 @@ export function FeaturedRooms({ tenantId }: FeaturedRoomsProps) {
     useEffect(() => {
         async function fetchRooms() {
             try {
-                const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
-                const res = await fetch(`${apiUrl}/api/public/hotel/room-types?tenantId=${tenantId}&featured=true`);
+                const res = await fetch(`${API_BASE}/api/public/hotel/room-types?tenantId=${tenantId}&featured=true`);
                 if (res.ok) {
                     const data = await res.json();
                     setRooms(data);

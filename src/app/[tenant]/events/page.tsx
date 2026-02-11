@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { CalendarDays, MapPin, Calendar, Clock, ArrowRight, Loader2 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import { hotelApi } from "@/lib/api";
+import { hotelApi, API_BASE } from "@/lib/api";
 
 interface HotelEvent {
     id: string;
@@ -97,8 +97,7 @@ export default function EventsPage() {
                     console.error("Error fetching config", e);
                 }
 
-                const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
-                const baseUrl = apiUrl === "" ? 'http://localhost:3000' : apiUrl;
+                const baseUrl = API_BASE === "" ? 'http://localhost:3000' : API_BASE;
                 const res = await fetch(`${baseUrl}/api/public/hotel/events?tenantId=${tenant}`);
                 if (res.ok) {
                     const data = await res.json();

@@ -15,6 +15,7 @@
     },
     "booking": {
         "checkIn": "Check In",
+        "dates": "Dates",
         "checkOut": "Check Out",
         "adults": "Adults",
         "children": "Children",

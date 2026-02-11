@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1e88d3fe-a726-4848-9b7e-ba781000845d" name="Changes" comment="feat: Integrate Inter font into layout for improved typography">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="1e88d3fe-a726-4848-9b7e-ba781000845d" name="Changes" comment="feat: enhance FeaturedRooms and page components with dynamic configuration and improved layout" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -93,6 +91,8 @@
       <workItem from="1770543687946" duration="1412000" />
       <workItem from="1770644886068" duration="1347000" />
       <workItem from="1770646680411" duration="624000" />
+      <workItem from="1770830312224" duration="326000" />
+      <workItem from="1770830941578" duration="2000" />
     </task>
     <task id="LOCAL-00001" summary="feat: Enhance Next.js configuration with remote image patterns and add new dining and experiences pages">
       <option name="closed" value="true" />
@@ -118,7 +118,15 @@
       <option name="project" value="LOCAL" />
       <updated>1770646329900</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="feat: enhance FeaturedRooms and page components with dynamic configuration and improved layout">
+      <option name="closed" value="true" />
+      <created>1770830343143</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1770830343143</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -128,7 +136,8 @@
     <MESSAGE value="feat: Enhance Next.js configuration with remote image patterns and add new dining and experiences pages" />
     <MESSAGE value="feat: Add events page with dynamic fetching and fallback data, enhance localization support" />
     <MESSAGE value="feat: Integrate Inter font into layout for improved typography" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: Integrate Inter font into layout for improved typography" />
+    <MESSAGE value="feat: enhance FeaturedRooms and page components with dynamic configuration and improved layout" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: enhance FeaturedRooms and page components with dynamic configuration and improved layout" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

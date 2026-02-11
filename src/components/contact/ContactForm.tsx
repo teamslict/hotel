@@ -3,6 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { API_BASE } from "@/lib/api";
 import { useTranslations } from "next-intl";
 import { useParams, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -53,7 +54,8 @@ export function ContactForm() {
         setError(null);
 
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/api/public/hotel/contact`, {
+            const baseUrl = API_BASE === "" ? 'http://localhost:3000' : API_BASE;
+            const response = await fetch(`${baseUrl}/api/public/hotel/contact`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

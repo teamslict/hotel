@@ -14,7 +14,10 @@ import {
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+    Popover, PopoverContent, PopoverTrigger,
+} from "@/components/ui/popover";
+import { API_BASE } from "@/lib/api";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -179,7 +182,7 @@ export default function BookPage() {
     useEffect(() => {
         const fetchItem = async () => {
             setLoading(true);
-            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+            const apiUrl = API_BASE === "" ? 'http://localhost:3000' : API_BASE;
             try {
                 if (serviceType === 'room') {
                     const id = roomTypeId || "1";
@@ -246,7 +249,7 @@ export default function BookPage() {
         if (!item) return;
 
         setIsSubmitting(true);
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+        const apiUrl = API_BASE === "" ? 'http://localhost:3000' : API_BASE;
 
         try {
             let endpoint = '';

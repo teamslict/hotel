@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { HotelConfig } from '@/lib/types';
+import { API_BASE } from '@/lib/api';
 
 interface HotelConfigState {
     config: HotelConfig | null;
@@ -8,8 +9,6 @@ interface HotelConfigState {
     setConfig: (config: HotelConfig) => void;
     fetchConfig: (subdomain: string) => Promise<void>;
 }
-
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 
 export const useHotelConfigStore = create<HotelConfigState>((set) => ({
     config: null,
